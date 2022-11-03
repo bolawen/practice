@@ -1,0 +1,12 @@
+{
+  "name": "practice",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:bolawen/practice.git",
+  "author": "bolawen <335303383@qq.com>",
+  "license": "MIT",
+  "scripts": {
+    "push": "git add . && git commit -m 推送 && git push origin master",
+    "pull": "git fetch --all && git reset --hard origin/master && git pull origin master"
+  }
+}

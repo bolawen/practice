@@ -1,0 +1,456 @@
+{
+  "mdd": {
+    "prefix": "mdd",
+    "body": [
+      "---",
+      "id: ${TM_FILENAME_BASE}",
+      "title: ${TM_FILENAME_BASE}",
+      "---"
+    ],
+    "description": "markdown 模板"
+  },
+  "mdb": {
+    "prefix": "mdb",
+    "body": [
+      "---",
+      "title: ${TM_FILENAME_BASE}",
+      "slug: ${TM_FILENAME_BASE}",
+      "authors: [bolawen]",
+      "date: ${CURRENT_YEAR}-${CURRENT_MONTH}-${CURRENT_DATE} ${CURRENT_HOUR}:${CURRENT_MINUTE}:${CURRENT_SECOND}",
+      "tags: [${TM_FILENAME_BASE}]",
+      "description: 好文章，就在柏拉文网",
+      "keywords: [${TM_FILENAME_BASE}]",
+      "image: https://bolawen.github.io/resource/image/poster/9.jpg",
+      "---",
+      "",
+      "",
+      "文章摘要",
+      "<!--truncate-->",
+    ],
+    "description": "markdown 模板"
+  },
+  "table": {
+    "prefix": "table",
+    "body": [
+      "<table>",
+      "  <thead>",
+      "      <tr>",
+      "        <th>表头一</th>",
+      "        <th>表头二</th>",
+      "        <th>表头三</th>",
+      "      </tr>",
+      "  </thead>",
+      "  <tbody>",
+      "      <tr>",
+      "        <td><code>表头内容一</code></td>",
+      "        <td>表头内容二</td>",
+      "        <td>",
+      "          <ul>",
+      "            <li>列表内容</li>",
+      "            <li>列表内容</li>",
+      "          </ul>",
+      "        </td>",
+      "    </tr>",
+      "  </tbody>",
+      "</table>",
+    ],
+    "description": "markdown 表格模板"
+  },
+  "img":{
+    "prefix": "img",
+    "body": [
+      "![图片描述](https://bolawen.github.io/resource/image/blog/$1)",
+    ]
+  },
+  "imgAntd":{
+    "prefix": "imgAntd",
+    "body": [
+      "import {Image} from 'antd'",
+      "",
+      "",
+      "<Image src=\"https://bolawen.github.io/resource/image/blog/$1\" \/>",
+    ]
+  },
+  "js": {
+    "prefix": "js",
+    "body": [
+      "```js",
+      "",
+      "```",
+    ],
+  },
+  "jsx": {
+    "prefix": "jst",
+    "body": [
+      "```jsx title=\"/src/components/HelloCodeTitle.js\"",
+      "",
+      "```",
+    ],
+  },
+  "ts": {
+    "prefix": "ts",
+    "body": [
+      "```ts title=\"\"",
+      "```",
+    ],
+  },
+   "css": {
+    "prefix": "css",
+    "body": [
+      "```css title=\"\"",
+      "```",
+    ],
+  },
+  "live": {
+    "prefix": "live",
+    "body": [
+      "```jsx live",
+      "function Test(props) {",
+      "  return (",
+      "     <div>",
+      "       <h2>测试代码</h2>",
+      "     </div>",
+      "  );",
+      "}",
+      "```",
+    ],
+  },
+  "mac":{
+    "prefix": "mac",
+    "body": [
+      "import BrowserWindow from '@site/src/components/BrowserWindow';",
+      "",
+      "",
+      "<BrowserWindow>",
+      "苹果窗口组件内容$1",
+      "</BrowserWindow>",
+    ]
+  },
+  "tab":{
+    "prefix": "tab",
+    "body": [
+      "import Tabs from '@theme/Tabs';",
+      "import TabItem from '@theme/TabItem';",
+      "",
+      "",
+      "<Tabs>",
+      "<TabItem value=\"html\" label=\"Html\">",
+      "",
+      "```html",
+      "<div className=\"box\">",
+        "<div className=\"item\"></div>",
+        "</div>",
+      "```",
+
+      "</TabItem>",
+      "<TabItem value=\"css\" label=\"Css\">",
+      "",
+      "```css",
+      "<div className=\"box\">",
+      "<div className=\"item\"></div>",
+      "</div>",
+      "```",
+      "",
+      "</TabItem>",
+      "<TabItem value=\"js\" label=\"JavaScript\">",
+      "",
+      "```js",
+      "function helloWorld() {",
+      "console.log('Hello, world!');",
+      "}",
+      "```",
+      "</TabItem>",
+      "<TabItem value=\"ts\" label=\"TavaScript\">",
+      "",
+      "```ts",
+      "function helloWorld() {",
+      "console.log('Hello, world!');",
+      "}",
+      "```",
+      "",
+      "</TabItem>",
+      "<TabItem value=\"vue\" label=\"Vue\">",
+      "",
+      "```vue",
+      "<template>",
+      "</template>",
+      "",
+      "<script>",
+      "</script>",
+      "",
+      "<style>",
+      "</style>",
+      "```",
+      "",
+      "</TabItem>",
+      "<TabItem value=\"py\" label=\"Python\">",
+      "",
+      "```py",
+      "def hello_world():",
+      "print 'Hello, world!'",
+      "```",
+      "",
+      "</TabItem>",
+      "<TabItem value=\"java\" label=\"Java\">",
+      "",
+      "```java",
+      "class HelloWorld {",
+      "public static void main(String args[]) {",
+      "System.out.println(\"Hello, World\");",
+      "}",
+      "}",
+      "```",
+      "",
+      "</TabItem>",
+      "<TabItem value=\"npm\" label=\"NPM\">",
+      "",
+      "```",
+      "npm install",
+      "```",
+      "",
+      "</TabItem>",
+      "<TabItem value=\"yarn\" label=\"Yarn\">",
+      "",
+      "```",
+      "yarn add",
+      "```",
+      "",
+      "</TabItem>",
+      "</Tabs>",
+    ]
+  },
+  "tab-npm":{
+    "prefix": "tab-npm",
+    "body": [
+      "import Tabs from '@theme/Tabs';",
+      "import TabItem from '@theme/TabItem';",
+      "",
+      "",
+      "<Tabs>",
+      "",
+      "<TabItem value=\"npm\" label=\"NPM\">",
+      "",
+      "```",
+      "npm install",
+      "```",
+      "",
+      "</TabItem>",
+      "<TabItem value=\"yarn\" label=\"Yarn\">",
+      "",
+      "```",
+      "yarn add",
+      "```",
+      "",
+      "</TabItem>",
+      "</Tabs>",
+    ]
+  },
+  "tab-yarn":{
+    "prefix": "tab-yarn",
+    "body": [
+      "import Tabs from '@theme/Tabs';",
+      "import TabItem from '@theme/TabItem';",
+      "",
+      "",
+      "<Tabs>",
+      "",
+      "<TabItem value=\"npm\" label=\"NPM\">",
+      "",
+      "```",
+      "npm install",
+      "```",
+      "",
+      "</TabItem>",
+      "<TabItem value=\"yarn\" label=\"Yarn\">",
+      "",
+      "```",
+      "yarn add",
+      "```",
+      "",
+      "</TabItem>",
+      "</Tabs>",
+    ]
+  },
+  "tab-html":{
+    "prefix": "tab-html",
+    "body": [
+      "import Tabs from '@theme/Tabs';",
+      "import TabItem from '@theme/TabItem';",
+      "",
+      "",
+      "<Tabs>",
+      "<TabItem value=\"html\" label=\"Html\">",
+      "",
+      "```html",
+      "<div className=\"box\">",
+        "<div className=\"item\"></div>",
+        "</div>",
+      "```",
+
+      "</TabItem>",
+      "<TabItem value=\"css\" label=\"Css\">",
+      "",
+      "```css",
+      "<div className=\"box\">",
+      "<div className=\"item\"></div>",
+      "</div>",
+      "```",
+      "",
+      "</TabItem>",
+      "<TabItem value=\"js\" label=\"JavaScript\">",
+      "",
+      "```js",
+      "function helloWorld() {",
+      "console.log('Hello, world!');",
+      "}",
+      "```",
+      "</TabItem>",
+      "<TabItem value=\"ts\" label=\"TavaScript\">",
+      "",
+      "```ts",
+      "function helloWorld() {",
+      "console.log('Hello, world!');",
+      "}",
+      "```",
+      "",
+      "</TabItem>",
+      "</Tabs>",
+    ]
+  },
+  "tab-vue":{
+    "prefix": "tab-vue",
+    "body": [
+      "import Tabs from '@theme/Tabs';",
+      "import TabItem from '@theme/TabItem';",
+      "",
+      "",
+      "<Tabs>",
+      "<TabItem value=\"template\" label=\"Template\">",
+      "",
+      "```html",
+      "<template>",
+        "<div class=\"${TM_FILENAME_BASE}\"></div>",
+      "</template>",
+      "```",
+      "",
+      "</TabItem>",
+      "<TabItem value=\"typescript\" label=\"Script\">",
+      "",
+      "```ts",
+      "export default {",
+      "",
+      "}",
+      "```",
+      "",
+      "</TabItem>",
+      "<TabItem value=\"css\" label=\"Style\">",
+      "",
+      "```css",
+      ".${TM_FILENAME_BASE}{", 
+      "}",
+      "```",
+      "",
+      "</TabItem>",
+      "</Tabs>",
+    ]
+  },
+  "note":{
+    "prefix": "note",
+    "body":[
+      ":::note",
+      ":::",
+    ]
+  },
+  "tip":{
+    "prefix": "tip",
+    "body":[
+      ":::tip",
+      ":::",
+    ]
+  },
+  "info":{
+    "prefix": "info",
+    "body":[
+      ":::info",
+      ":::",
+    ]
+  },
+  "caution":{
+    "prefix": "caution",
+    "body":[
+      ":::caution",
+      ":::",
+    ]
+  },
+  "danger":{
+    "prefix": "danger",
+    "body":[
+      ":::danger",
+      ":::",
+    ]
+  },
+  "detail":{
+    "prefix": "detail",
+    "body":[  
+      "<details>",
+      "  <summary>详情代码块标题</summary>",
+      "  详情代码块内容",
+      "</details>",
+    ] 
+  },
+  "heightLightSingle":{
+    "prefix": "heightLightSingle",
+    "body":[
+      "// highlight-next-line",
+    ]
+  },
+  "heightLightMulti":{
+    "prefix": "heightLightMulti",
+    "body":[
+      "// highlight-start",
+      "",
+      "// highlight-end",
+    ]
+  },
+  "sidebar":{
+    "prefix": "sidebar",
+    "body": [
+      "module.exports = [", 
+      "{",
+      " label: \"${TM_DIRECTORY}\",",
+      " dirName: \"${TM_DIRECTORY}\"",
+      "},",
+      "]"
+    ]
+  },
+  "link":{
+    "prefix": "link",
+    "body": [
+      "[前往知识点]()"
+    ]
+  },
+  "record":{
+    "prefix": "record",
+    "body": [
+      "## 时间: ${CURRENT_YEAR}/${CURRENT_MONTH}/${CURRENT_DATE} ${CURRENT_DAY_NAME}",
+      "",
+      "### 主题:",
+      "",
+      "**内容如下**:"
+    ]
+  },
+  "dir":{
+    "prefix": "dir",
+    "body": [
+      "website # 网站根目录",
+      "├── docs",
+      "│   └── greeting.md",
+      "├── src",
+      "│   └── pages",
+      "├── docusaurus.config.js",
+      "├── ..."
+    ]
+  }
+}
+
+

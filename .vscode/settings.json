@@ -1,0 +1,11 @@
+{
+  "explorer.confirmDelete": true,
+  "editor.wordWrap": "on",
+  "[markdown]": {
+    "editor.quickSuggestions": {
+      "comments": "on",
+      "strings": "on",
+      "other": "on"
+    }
+  }
+}
