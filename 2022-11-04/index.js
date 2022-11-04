@@ -115,12 +115,3 @@ cacheRequest(
     console.log(err);
   }
 );
-cacheRequest(
-  "3.com",
-  (data) => {
-    console.log(data);
-  },
-  (err) => {
-    console.log(err);
-  }
-);
