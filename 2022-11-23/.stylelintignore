@@ -1,0 +1,10 @@
+*.js
+*.ts
+*.png
+*.jpg
+*.webp
+*.ttf
+*.woff
+dist/
+public/
+node_modules/
