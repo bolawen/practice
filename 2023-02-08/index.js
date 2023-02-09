@@ -1,17 +1,40 @@
-function groupValue(value, index, flag) {
-  const reg = new RegExp(`\\d{1,${index}}(?=(\\d{${index}})+$)`, "g");
-  return String(value).replace(reg, function (match, ...args) {
-    return match + flag;
-  });
+const fs = require("fs");
+
+function getMdConfig(mdPath) {
+  const mdData = fs.readFileSync(mdPath, "utf-8");
+  const strMdDataObjList = getObject(mdData);
+  return transformObject(strMdDataObjList);
 }
-function formatThousands(value) {
-  const strValue = String(value);
-  const cacheList = strValue.split(".");
-  const int = cacheList[0];
-  const fraction = cacheList[1];
-  const result = groupValue(int, 3, ",");
-  return result + (!!fraction ? "." + fraction : "");
+function getObject(str) {
+  const reg1 = /\n/g;
+  const reg2 = /(?<=(---)).*?(?=(---))/g;
+  const reg3 = /(\w+)\:\s*(?:(\S+))/g;
+  const strCopy = str.match(reg1)?.[0] || "";
+  const headerContent = strCopy.match(reg2)?.[0] || "";
+  console.log("headerContent", headerContent);
+  const strContent = reg1.exec(str)?.[1] || "";
+  console.log("strContent", strContent);
+  return strContent.match(reg2) || [];
+}
+function transformObject(array) {
+  const { length } = array;
+  if (!length) {
+    return;
+  }
+  const arrayCopy = array.map((value) => {
+    return value.split(":");
+  });
+  return Object.fromEntries(arrayCopy);
 }
 
-const num = 4453232566.9888;
-console.log(formatThousands(num));
+const mdData = fs.readFileSync("./a.md", "utf-8");
+console.log(mdData)
+// getObject(mdData);
+const reg1 = /[\n]/g;
+console.log(mdData.replace(reg1, "|"));
+
+// 使用正则
+let reg = /(?<=(---)).*?(?=(---))/g;
+let str = '---|id: write|sort: 1|title: 编写|---';
+// 使用
+console.log(str.match(reg)); // 输出 ['1234']
