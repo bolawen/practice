@@ -6,30 +6,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
     <style>
-      .container{
-        width: 600px;
-        display: flex;
-        justify-content:space-between;
-        background-color: #45dc89;
+      html{
+        padding: 24px;
       }
-      .left{
-        width: 50%;
-        align-self: stretch;
-        background-color: #dcc345;
+      .container {
+        width: 200px;
+        height: 200px;
+        background-color: red;
+        padding: 24px;
+        position: fixed;
       }
-      .right{
-        width: 50%;
-        background-color: #457adc;
+      .content{
+        position: relative;
+        top: 0px;
+        left: 0px;
+        width: 20%;
+        height: 20%;
+        background-color: blue;
       }
     </style>
   </head>
   <body>
     <div class="container">
-      <div class="left"></div>
-      <div class="right">
-        <div>abc</div>
-        <div>def</div>
-      </div>
+      <div class="content"></div>
     </div>
   </body>
 </html>
