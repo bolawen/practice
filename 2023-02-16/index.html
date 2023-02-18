@@ -29,6 +29,26 @@
     </style>
 </head>
 <body>
-    <div class="container"></div>
+    <script>
+        function p(){
+            return new Promise((resolve)=>{
+                resolve("then");
+            });
+        }
+        async function func(){
+            p().then((res)=>{
+                console.log(res);
+                return "22"
+            });
+            return 22;
+        }
+        (async()=>{ 
+            console.log("11")
+            const result = await func();
+            console.log(result);
+            console.log("33");
+        })()
+        
+    </script>
 </body>
 </html>
