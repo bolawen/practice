@@ -1,58 +1,50 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
   <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-    <style>
-      nav {
-        display: flex;
-        justify-content: center;
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <title>Examples</title>
+    <style type="text/css">
+      #main {
+        width: 100%;
+        display: table;
       }
-
-      .pagination {
-        list-style: none;
-        margin: 0;
-        padding: 0;
-        display: flex;
+      div.sideBar {
+        width: 70%;
+        height: 100%;
+        background: #cd2020;
+        display: table-cell;
       }
-
-      .pagination li {
-        margin: 0 1px;
+      div.content {
+        width: 28%;
+        background: #2054cd;
+        height: 100%;
+        display: table-cell;
       }
     </style>
   </head>
   <body>
-    <nav aria-label="pagination">
-      <ul class="pagination">
-        <li>
-          <a href=""
-            ><span aria-hidden="true">«</span
-            ><span class="visuallyhidden">previous set of pages</span></a
-          >
-        </li>
-        <li>
-          <a href=""><span class="visuallyhidden">page </span>1</a>
-        </li>
-        <li>
-          <a href="" aria-current="page"
-            ><span class="visuallyhidden">page </span>2</a
-          >
-        </li>
-        <li>
-          <a href=""><span class="visuallyhidden">page </span>3</a>
-        </li>
-        <li>
-          <a href=""><span class="visuallyhidden">page </span>4</a>
-        </li>
-        <li>
-          <a href=""
-            ><span class="visuallyhidden">next set of pages</span
-            ><span aria-hidden="true">»</span></a
-          >
-        </li>
-      </ul>
-    </nav>
+    <div id="main">
+      <div class="sideBar">
+        <p>这是测试</p>
+        <p>这是测试</p>
+        <p>这是测试</p>
+        <p>这是测试</p>
+        <p>这是测试</p>
+        <p>这是测试</p>
+        <p>这是测试</p>
+        <p>这是测试</p>
+        <p>这是测试</p>
+        <p>这是测试</p>
+        <p>这是测试</p>
+        <p>这是测试</p>
+      </div>
+      <div class="content">
+        <p>这是测试</p>
+        <p>这是测试</p>
+        <p>这是测试</p>
+        <p>这是测试</p>
+      </div>
+    </div>
   </body>
 </html>
