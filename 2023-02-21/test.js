@@ -43,8 +43,8 @@ function getLabelByte(str) {
 
 function sortCategoryAndDocs(array) {
   array.sort((a, b) => {
-    if (a.sort && b.sort && a.sort < b.sort) {
-      return -1;
+    if (a.sort && b.sort && a.sort !== b.sort) {
+      return a.sort < b.sort ? -1 : 1;
     }
     const aLabelByte = getLabelByte(a.label);
     const bLabelByte = getLabelByte(b.label);
@@ -92,6 +92,8 @@ const array = [
     sort: 10,
   },
 ];
+
+sortCategoryAndDocs(array);
 
 sortCategoryAndDocs(array);
 
