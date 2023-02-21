@@ -1,114 +1,175 @@
 const fs = require("fs");
 const path = require("path");
 
-function getCharByte(char){
-    const regChinese = /[\u4e00-\u9fa5]/g;
-    const regUpperCase = /[A-Z]/g;
-    const regLowerCase = /[a-z]/g;
-    const upperCaseSpecial = ["M","W"];
-    const lowerCaseSpecial = ['m','w'];
-    const specialLowChar = ["i","I","1"];
+function getCharByte(char) {
+  const regChinese = /[\u4e00-\u9fa5]/g;
+  const regUpperCase = /[A-Z]/g;
+  const regLowerCase = /[a-z]/g;
+  const upperCaseSpecial = ["M", "W", "G"];
+  const lowerCaseSpecial = ["m", "w"];
+  const specialLowChar = ["i", "I", "1", "l", "t"];
 
-    if(regChinese.test(char)){
-        return 2;
-    }else if(regUpperCase.test(char)){
-        if(upperCaseSpecial.includes(char)){
-            return 1.8
-        }
-        if(specialLowChar.includes(char)){
-            return 1.4
-        }
-        return 1.6;
-    }else if(regLowerCase.test(char)){
-        if(lowerCaseSpecial.includes(char)){
-            return 1.4;
-        }
-        if(specialLowChar.includes(char)){
-            return 0.8;
-        }
-        return 1;
-    }else{
-        if(specialLowChar.includes(char)){
-            return 0.8;
-        }
-        return 1;
+  if (regChinese.test(char)) {
+    return 2;
+  } else if (regUpperCase.test(char)) {
+    if (upperCaseSpecial.includes(char)) {
+      return 2;
     }
-}
-function getLabelByte(str){
-    if(!str){
-        str = "";
+    if (specialLowChar.includes(char)) {
+      return 1.2;
     }
-    const strList = str.split("");
-    return strList.reduce((prev,curr)=>{
-        return prev + getCharByte(curr);
-    },0);
+    return 1.4;
+  } else if (regLowerCase.test(char)) {
+    if (lowerCaseSpecial.includes(char)) {
+      return 1.4;
+    }
+    if (specialLowChar.includes(char)) {
+      return 0.8;
+    }
+    return 1;
+  } else {
+    if (specialLowChar.includes(char)) {
+      return 0.8;
+    }
+    return 1;
+  }
 }
+function getLabelByte(str) {
+  if (!str) {
+    str = "";
+  }
+  const strList = str.split("");
+  return strList.reduce((prev, curr) => {
+    return prev + getCharByte(curr);
+  }, 0);
+}
+
 function sort(array){
-    array.sort((a,b)=>{
-        if(a.sort && b.sort && a.sort < b.sort){
-            return -1;
-        }
-        const aLabelByte = getLabelByte(a.label);
-        const bLabelByte = getLabelByte(b.label);
-        if(aLabelByte === bLabelByte){
-            return a.label.localeCompare(b.label)
-        }
-        return aLabelByte < bLabelByte ? -1 : 1;
+    array.sort((a, b) => {
+      if (a.sort && b.sort && a.sort < b.sort) {
+        return -1;
+      }
+      const aLabelByte = getLabelByte(a.label);
+      const bLabelByte = getLabelByte(b.label);
+      if (aLabelByte === bLabelByte) {
+        return a.label.localeCompare(b.label);
+      }
+      return aLabelByte < bLabelByte ? -1 : 1;
     });
 }
 
 const array = [
-    {
-      "type": "doc",
-      "id": "article/git/operation/actions",
-      "label": "调试",
-      "sort": 10
-    },
-    {
-      "type": "doc",
-      "id": "article/git/operation/github",
-      "label": "配置",
-      "sort": 10
-    },
-    {
-      "type": "doc",
-      "id": "article/git/operation/merge-commit",
-      "label": " Git Merge Commit",
-      "sort": 10
-    },
-    {
-      "type": "doc",
-      "id": "article/git/operation/pages",
-      "label": " Git Pages",
-      "sort": 10
-    },
-    {
-      "type": "doc",
-      "id": "article/git/operation/pull",
-      "label": " Git Pull",
-      "sort": 10
-    },
-    {
-      "type": "doc",
-      "id": "article/git/operation/push",
-      "label": " Git Push",
-      "sort": 10
-    },
-    {
-      "type": "doc",
-      "id": "article/git/operation/ssh",
-      "label": " Git SSH Key",
-      "sort": 10
-    },
-    {
-      "type": "doc",
-      "id": "article/git/operation/webhooks",
-      "label": " Git WebHooks",
-      "sort": 10
-    }
-  ]
+  { type: "doc", id: "npm/package", sort: 10, label: "操作" },
+  {
+    type: "category",
+    label: "脚本",
+    collapsible: true,
+    collapsed: true,
+    sort: 10,
+    items: [
+      {
+        type: "category",
+        label: "案例",
+        collapsible: true,
+        collapsed: true,
+        sort: 10,
+        items: [
+          {
+            type: "doc",
+            id: "npm/scripts/demo/frontDeployment",
+            sort: 10,
+            label: "前端部署",
+          },
+        ],
+      },
+      {
+        type: "doc",
+        id: "npm/scripts/readme",
+        sort: 0,
+        label: "认识",
+      },
+    ],
+  },
+  { type: "doc", id: "npm/readme", sort: 1, label: "认识" },
+  { type: "doc", id: "npm/problem", sort: 10, label: "问题" },
+  {
+    type: "category",
+    label: "包管理",
+    collapsible: true,
+    collapsed: true,
+    sort: 10,
+    items: [
+      {
+        type: "doc",
+        id: "npm/packageManager/rush",
+        sort: 10,
+        label: "Rush",
+      },
+      {
+        type: "doc",
+        id: "npm/packageManager/yarn",
+        sort: 10,
+        label: "Yarn",
+      },
+      {
+        type: "doc",
+        id: "npm/packageManager/pnpm",
+        sort: 10,
+        label: "PnPm",
+      },
+      {
+        type: "doc",
+        id: "npm/packageManager/cnpm",
+        sort: 10,
+        label: "CNPM",
+      },
+    ],
+  },
+  {
+    type: "category",
+    label: "仓库管理",
+    collapsible: true,
+    collapsed: true,
+    sort: 10,
+    items: [
+      {
+        type: "doc",
+        id: "npm/storeManager/lerna",
+        sort: 10,
+        label: "Lerna",
+      },
+      {
+        type: "doc",
+        id: "npm/storeManager/monorepo",
+        sort: 10,
+        label: "Monorepo",
+      },
+    ],
+  },
+  {
+    type: "category",
+    label: "镜像管理",
+    collapsible: true,
+    collapsed: true,
+    sort: 10,
+    items: [
+      {
+        type: "doc",
+        id: "npm/imageManager/yrm",
+        sort: 10,
+        label: "Yrm",
+      },
+      {
+        type: "doc",
+        id: "npm/imageManager/nrm",
+        sort: 10,
+        label: "NRM",
+      },
+    ],
+  },
+];
 sort(array);
-console.log(array)
+console.log(array.length)
 
 function getMdContent(filePath) {
     return fs.readFileSync(filePath, "utf-8");
