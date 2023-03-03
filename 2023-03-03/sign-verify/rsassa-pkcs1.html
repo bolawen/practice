@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <section class="sign-verify rsassa-pkcs1">
+      <h2 class="sign-verify-heading">RSASSA-PKCS1-v1_5</h2>
+      <section class="sign-verify-controls">
+        <div class="message-control">
+          <label for="rsassa-pkcs1-message">Enter a message to sign:</label>
+          <input
+            type="text"
+            id="rsassa-pkcs1-message"
+            name="message"
+            size="25"
+            value="The owl hoots at midnight"
+          />
+        </div>
+        <div class="signature">
+          Signature:<span class="signature-value"></span>
+        </div>
+        <input class="sign-button" type="button" value="Sign" />
+        <input class="verify-button" type="button" value="Verify" />
+      </section>
+    </section>
+    <script src="rsassa-pkcs1.js"></script>
+  </body>
+</html>
