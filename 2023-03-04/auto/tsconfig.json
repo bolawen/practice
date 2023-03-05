@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "outDir": "dist",
+    "strict": true,
+    "newLine": "LF",
+    "allowJs": true,
+    "types": ["node"],
+    "jsx": "preserve",
+    "target": "es2015",
+    "module": "ESNext",
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "moduleResolution": "node",
+    "lib": ["es2015", "esnext", "dom"],
+    "forceConsistentCasingInFileNames": true,
+    "paths": {
+      "util/*": ["src/util/*"],
+    }
+  },
+  "include": ["src/*"],
+  "exclude": ["node_modules", "dist"],
+}
