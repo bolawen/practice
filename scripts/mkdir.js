@@ -12,7 +12,7 @@ function createFileName() {
   let month = date.getMonth() + 1;
   let day = date.getDate();
   month = month > 9 ? month : "0" + month;
-  day = month > 9 ? day : "0" + day;
+  day = day > 9 ? day : "0" + day;
   return year + "-" + month + "-" + day;
 }
 
