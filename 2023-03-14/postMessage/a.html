@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <h2>A 页面</h2>
+    <iframe src="./b.html"></iframe>
+    <script>
+      const targetOrigin = "*";
+      const iframePage = document.querySelector("iframe[src='./b.html']");
+      iframePage.addEventListener("load", function () {
+        iframePage.contentWindow.postMessage("aa", targetOrigin);
+      });
+
+      function receiveMessage(e) {
+        const { data, origin, source } = e;
+        if (origin === targetOrigin) {
+          console.log("A 页面发送数据之后的回调数据", data);
+        }
+        console.log("A 页面接收的数据", data);
+      }
+      window.addEventListener("message", receiveMessage, true);
+    </script>
+  </body>
+</html>
