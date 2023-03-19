@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <h2>B 页面</h2>
+    <script>
+      function receiveMessage(e) {
+        const { data, origin, source } = e;
+        console.log("B 页面接收到的数据", data);
+        const targetOrigin = origin && origin !== "null" ? origin : "*";
+        source.postMessage("bb", targetOrigin);
+      }
+      window.addEventListener("message", receiveMessage);
+    </script>
+  </body>
+</html>

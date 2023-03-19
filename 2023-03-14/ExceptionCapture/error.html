@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script>
+      const errorMap = {
+        jsRun: "js 运行时错误",
+        img: "img 资源加载失败",
+        link: "link 资源加载失败",
+        script: "script 资源加载失败",
+      };
+      function handlerError(e) {
+        e.preventDefault();
+        const { colno, error, filename, lineno, message, srcElement, target } =
+          e;
+        const currentTarget = srcElement || target;
+        let errorType;
+        if (currentTarget instanceof HTMLScriptElement) {
+          errorType = "script";
+        } else if (currentTarget instanceof HTMLLinkElement) {
+          errorType = "link";
+        } else if (currentTarget instanceof HTMLImageElement) {
+          errorType = "img";
+        } else {
+          errorType = "jsRun";
+        }
+        console.log(errorMap[errorType], errorType === "jsRun" ? message : "");
+      }
+      window.addEventListener("error", handlerError, true);
+    </script>
+    <link href="https://test.cn/×××.css" rel="stylesheet" />
+    <script src="https://test.cn/×××.js"></script>
+  </head>
+  <body>
+    <img src="https://test.cn/×××.jpg" />
+
+    <script>
+
+      [3, 4].forEach((item) => {
+        console.log(item.a.b);
+      });
+
+      console.log(a);
+
+      setTimeout(() => {
+        console.log(b);
+      }, 300);
+
+    </script>
+  </body>
+</html>
