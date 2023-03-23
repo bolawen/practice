@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ajax 通过 Post-FormData 序列化进度检测</title>
+  </head>
+  <body>
+    <input id="fileElm" type="file"/>
+    <input id="process" type="range" max="100" min="0" value="0"/>
+    
+    <script>
+      const file = document.getElementById("fileElm");
+      const process = document.getElementById("process");
+
+      function uploadProgress(e) {
+        if (e.lengthComputable) {
+          const percentage = Math.round((e.loaded * 100) / e.total);
+          process.value = percentage;
+        }
+      }
+
+      function uploadComplete(e) {
+        process.value = 100;
+      }
+
+      function uploadReadStateChange(e) {
+        if (e.readyState === 4 && [200, 304].includes(e.status)) {
+          const { response } = e;
+          console.log(response);
+        }
+      }
+
+      function upload(file) {
+        const ajax = new XMLHttpRequest();
+        ajax.open(
+          "post",
+          "http://localhost:4000/post-multipart-form-data",
+          true
+        );
+
+        ajax.upload.addEventListener("progress", uploadProgress, false);
+        ajax.upload.addEventListener("load", uploadComplete, false);
+        ajax.addEventListener("readystatechange", uploadReadStateChange, false);
+        const formData = new FormData();
+        formData.append("file", files[0]);
+        formData.append("filename", files[0].name);
+        ajax.send(formData);
+      }
+
+      function selectFile(e) {
+        const {
+          target: { files },
+        } = e;
+        upload(file);
+      }
+
+      file.addEventListener("change", selectFile);
+    </script>
+  </body>
+</html>
