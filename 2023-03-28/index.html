@@ -6,27 +6,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
     <style>
-      .content-wrap {
-        position: relative;
-        width: 200px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        display: -webkit-inline-box;
-        -webkit-box-orient: vertical;
-        -webkit-line-clamp: 2;
-      }
-      .tag-end{
-        position: absolute;
-        bottom: 0;
-        right: -8px;
-      }
+      .text-container {
+  width: 300px; /* 设置文本容器宽度 */
+  height: 60px; /* 设置文本容器高度 */
+  font-size: 14px; /* 设置文本字体大小 */
+  line-height: 1.5; /* 设置文本行高 */
+  overflow: hidden; /* 设置文本溢出隐藏 */
+  position: relative; /* 设置容器相对定位 */
+}
+
+.text {
+  display: -webkit-box; /* 使用webkit内核浏览器支持的display属性 */
+  -webkit-line-clamp: 2; /* 设置文本行数 */
+  -webkit-box-orient: vertical; /* 设置文本内容为垂直排列 */
+  text-overflow: ellipsis; /* 设置超出部分显示省略号 */
+}
+
+.quote {
+  position: absolute; /* 设置书引号绝对定位 */
+  bottom: 0; /* 设置书引号距离容器底部为0 */
+  right: 0; /* 设置书引号距离容器右侧为0 */
+  font-size: 20px; /* 设置书引号字体大小 */
+  line-height: 1; /* 设置书引号行高 */
+}
     </style>
   </head>
   <body>
-    <div class="content-wrap">
-      <span class="tag-start">来自课程《</span>
-      <span class="content">辅导授课发了多少佛挡杀李开复单身快乐放大看了司法鉴定开始了防控领导实际付款拉德斯基</span>
-      <span class="tag-end">》</span>
+    <div class="text-container">
+      <span class="text">来自课程《文本内容文本内容文本内容文本内容文本内容文本内容文本内容文本内容文本内容文本内容文本内容文本内容文本内容文</span>
+      <span class="quote">》</span>
     </div>
   </body>
 </html>
