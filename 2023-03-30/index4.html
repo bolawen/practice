@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+      .text-container{
+        width:400px;
+        position: relative;
+      }
+      .text{
+        width:50%;
+        font-size: 0;
+        overflow: hidden;
+        position: relative;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+      .text span{
+        color: black;
+        font-size:16px;
+      }
+      .reverse-text{
+        top: 0;
+        right: 0;
+        width: 50%;
+        direction: rtl;
+        overflow: hidden;
+        position: absolute;
+        white-space: nowrap;    
+        text-overflow: ellipsis;
+      }
+    </style>
+</head>
+<body>
+  <div class="text-container">
+    <div class="text">
+      <span>JavaScript（通常缩写为JS）是一种高级的、解释型的编程语言。</span>
+    </div>
+    <div class="reverse-text">
+      <span>JavaScript（通常缩写为JS）是一种高级的、解释型的编程语言。</span>
+    </div>
+  </div>
+</div>
+</body>
+</html>

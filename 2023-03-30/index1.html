@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      .text-container {
+        display: flex;
+      }
+      .text {
+        width: 200px;
+        overflow: hidden;
+        position: relative;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+      }
+      .text::before {
+        content: "";
+        width: 0;
+        height: calc(100% - 22px);
+        float: right;
+      }
+      .close-tag {
+        float: right;
+        clear: both;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="text-container">
+      <div class="text">
+        <span class="close-tag">》</span>
+        来自课程《小小的一片云压，慢慢的走过来，请你们歇歇脚呀，暂时停下来！山上的山花开呀，我才到山上来。》
+      </div>
+    </div>
+  </body>
+</html>

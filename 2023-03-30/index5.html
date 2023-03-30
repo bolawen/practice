@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      .text-container {
+        width: 320px;
+        line-height: 20px;
+        position: relative;
+        overflow: hidden;
+      }
+      .text {
+        float: right;
+        width: 100%;
+        margin-left: -150px;
+        font-size: 16px;
+        color: transparent;
+        font-family: auto;
+        letter-spacing: 1px;
+      }
+      .text1 {
+        float: right;
+        width: 100%;
+        position: absolute;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 1;
+        font-size: 150px;
+        letter-spacing: 1px;
+        font-family: cursive;
+        color: transparent;
+        overflow: hidden;
+      }
+      .text1 span {
+        font-size: 16px;
+        letter-spacing: 1px;
+        vertical-align: top;
+        color: black;
+        font-family: auto;
+      }
+      .empty {
+        float: right;
+        width: 150px;
+        height: 80px;
+      }
+      .text2 {
+        float: right;
+        width: 150px;
+        height: 20px;
+        position: relative;
+        transform: translate(-100%, -100%);
+        left: 100%;
+        color: black;
+        direction: rtl;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 1;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="text-container">
+      <div class="text">
+        JavaScript（通常缩写为JS）是一种高级的、解释型的编程语言。JavaScript是一门基于原型、头等函数的语言，是一门多范式的语言，它支持面向对象程序设计，指令式编程，以及函数式编程。
+      </div>
+      <div class="text1">
+        <span>
+          JavaScript（通常缩写为JS）是一种高级的、解释型的编程语言。JavaScript是一门基于原型、头等函数的语言，是一门多范式的语言，它支持面向对象程序设计，指令式编程，以及函数式编程。
+        </span>
+      </div>
+      <div class="empty"></div>
+      <div class="text2">
+        JavaScript（通常缩写为JS）是一种高级的、解释型的编程语言。JavaScript是一门基于原型、头等函数的语言，是一门多范式的语言，它支持面向对象程序设计，指令式编程，以及函数式编程。
+      </div>
+    </div>
+  </body>
+</html>

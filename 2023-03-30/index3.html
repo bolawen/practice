@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      .text-container {
+        width: 194px;
+        display: flex;
+      }
+      .text {
+        position: relative;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        transition: 0.3s linear all;
+      }
+      .text::before {
+        content: "";
+        width: 0;
+        float: right;
+        height: calc(100% - 22px);
+      }
+      .text::after {
+        content: "";
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        background-color: #fff;
+      }
+      #checkbox:checked + .text::after {
+        display: none;
+      }
+      .text[line-clamp="1"] {
+        -webkit-line-clamp: 1;
+      }
+      .text[line-clamp="2"] {
+        -webkit-line-clamp: 2;
+      }
+      .text[line-clamp="3"] {
+        -webkit-line-clamp: 3;
+      }
+      .text[line-clamp="4"] {
+        -webkit-line-clamp: 4;
+      }
+      #checkbox {
+        display: none;
+      }
+      #checkbox:checked + .text {
+        -webkit-line-clamp: 999;
+      }
+      .operation {
+        clear: both;
+        float: right;
+        font-size: 14px;
+        padding: 0 2px;
+        background-color: red;
+      }
+      #checkbox:checked + .text .operation::before {
+        display: none;
+      }
+      .operation::after {
+        content: "展开";
+      }
+      #checkbox:checked + .text .operation::after {
+        content: "收起";
+      }
+    </style>
+  </head>
+  <body>
+    <div class="text-container">
+      <input type="checkbox" id="checkbox" />
+      <div class="text" line-clamp="3">
+        <label class="operation" for="checkbox"></label>
+        这是一个很寂寞的天, 下着有些伤心的雨！这是一个很在乎的我,
+        一个无所谓的结局！曾经为了爱而努力，曾经为了爱而逃避！佛挡杀两款发动机离开防盗链开始放假
+      </div>
+    </div>
+  </body>
+</html>
