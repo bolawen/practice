@@ -1,0 +1,279 @@
+<template>
+  <div class="back_warp">
+    <div class="letGodBaike-container" ref="scrollEl" @scroll="onScroll">
+      <div class="letGodBaike-header">
+        <div class="letGodBaike-header-banner" ref="banner">
+          <img
+            src="https://img-nos.yiyouliao.com/inforec-20220224-bd38ba5a0bb3e99b610eff52d42a417d.jpg?time=1645704280&signature=BB2E3E5E20460CA4863C2CFD02775E01"
+            alt=""
+          />
+        </div>
+
+        <!-- tabs -->
+        <div class="letGodBaike-header-tab" ref="headerTab">
+          <van-tabs
+            ref="vantab"
+            :class="['letGodBaike-header-fixed', fixed]"
+            v-model="active"
+            title-active-color="#333"
+            title-inactive-color="#808080"
+            color="#fff"
+            @click="elToScroll"
+          >
+            <van-tab v-for="item in list" :key="item">
+              <strong slot="title">{{ item }}</strong>
+            </van-tab>
+          </van-tabs>
+        </div>
+      </div>
+
+      <!-- 内容 -->
+      <div class="letGodBaike-list">
+        <ul
+          class="letGodBaike-list-ul"
+          v-for="(ul, index) in list"
+          :key="ul"
+          :ref="'ul' + index"
+        >
+          <li class="letGodBaike-list-ul-title">{{ ul }}</li>
+          <li class="letGodBaike-list-ul-li">
+            <div
+              class="letGodBaike-list-ul-li-item"
+              v-for="li in cList[ul]"
+              :key="li"
+            >
+              {{ li }}
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <!-- 到顶部 -->
+      <div v-show="fixed" class="letGodBaike-up" @click="run(0)"></div>
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  head() {
+    return {
+      title: this.$route.query.title,
+    }
+  },
+  data() {
+    return {
+      active: 0,
+      list: [
+        '新手入门',
+        '任务查询',
+        '地图',
+        '图鉴汇总',
+        '怪物图鉴',
+        '情场高手',
+      ],
+      cList: {
+        新手入门: ['入门tips1', '入门tips2', '入门tips3', '入门tips4'],
+        任务查询: ['入门tips1', '入门tips2', '入门tips3', '入门tips4'],
+        地图: ['入门tips1', '入门tips2', '入门tips3', '入门tips4'],
+        图鉴汇总: ['入门tips1', '入门tips2', '入门tips3', '入门tips4'],
+        怪物图鉴: ['入门tips1', '入门tips2', '入门tips3', '入门tips4'],
+        情场高手: ['入门tips1', '入门tips2', '入门tips3', '入门tips4'],
+      },
+      fixed: '',
+    }
+  },
+  mounted() {
+    console.log(
+      document
+        .querySelectorAll('.letGodBaike-list-ul')[0]
+        .getBoundingClientRect().top
+    )
+  },
+  methods: {
+    // 滚动到对应位置激活tab
+    scrollToEl() {
+      try {
+        let tabHeight = this.$refs.vantab.tabHeight
+        let domList = document.querySelectorAll('.letGodBaike-list-ul')
+        let list = [...domList].filter((v, i) => {
+          // 获取Ul距离屏幕顶部的距离
+          let top = v.getBoundingClientRect().top
+
+          // 当距离在tab高度误差范围内，激活tab
+          if (tabHeight - 30 < top && top < tabHeight + 30) {
+            this.active = i
+          }
+        })
+      } catch (error) {
+        throw error
+      }
+    },
+
+    // 监听滚动事件
+    onScroll({ target }) {
+      this.$nextTick(() => {
+        let bannerHeight = this.$refs.banner.offsetHeight
+
+        // 当滚动距离大于banner的高度时，tabs吸顶
+        if (target.scrollTop >= bannerHeight) {
+          this.fixed = 'fixed'
+          let tabHeight = this.$refs.vantab.tabHeight
+          this.$refs.headerTab.style.minHeight = tabHeight + 'px'
+          this.scrollToEl()
+        } else this.fixed = ''
+      })
+    },
+
+    // 点击tab滚动到对应的位置
+    elToScroll(index) {
+      try {
+        let screenHeight = window.innerHeight
+        let scrollHeight = this.$refs.scrollEl.scrollHeight
+        let lastHeight = scrollHeight - screenHeight
+        let ulHeight = this.$refs[`ul${index}`][0].offsetTop - 53
+        // 当位置在最后一屏时，滚动距离为容器高度减去屏幕高度
+        if (ulHeight > lastHeight) {
+          this.run(lastHeight)
+        } else {
+          this.run(ulHeight)
+        }
+      } catch (error) {
+        throw error
+      }
+    },
+
+    // 滚动速度
+    speedFn(time, height) {
+      return height / time
+    },
+
+    // 滚动函数
+    run(ulHeight) {
+      // 1s执行速度
+      let speed = Math.max(5, this.speedFn(1000, ulHeight))
+      this.myIntval(() => {
+        // 向上滚动
+        if (this.$refs.scrollEl.scrollTop > ulHeight) {
+          this.$refs.scrollEl.scrollTop -= speed
+          if (this.$refs.scrollEl.scrollTop < ulHeight) {
+            return false
+          }
+
+          // 向下滚动
+        } else {
+          this.$refs.scrollEl.scrollTop += speed
+          if ((+this.$refs.scrollEl.scrollTop).toFixed(0) >= ulHeight) {
+            return false
+          }
+        }
+        return true
+      }, 1)
+    },
+
+    // Intval
+    myIntval(fn, time) {
+      setTimeout(() => {
+        if (fn()) {
+          this.myIntval(fn, time)
+        }
+      }, time)
+    },
+  },
+}
+</script>
+
+<style lang="scss" scoped>
+.back_warp {
+  background-color: #fff;
+  height: 100%;
+
+  .letGodBaike-container {
+    background-color: #fff;
+    min-height: 100%;
+    height: 100%;
+    color: #808080;
+    overflow-y: auto;
+    font-size: 14px;
+    overscroll-behavior: none;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: constant(safe-area-inset-bottom);
+    padding-bottom: env(safe-area-inset-bottom);
+
+    .letGodBaike-header {
+      // 百科banner
+      .letGodBaike-header-banner {
+        img {
+          width: 375px;
+          height: 276px;
+        }
+      }
+
+      // 百科tab
+      .letGodBaike-header-tab {
+        .letGodBaike-header-fixed {
+          &.fixed {
+            position: fixed;
+            top: 0;
+          }
+        }
+      }
+    }
+
+    // 百科列表
+    .letGodBaike-list {
+      padding: 0 16px 276px 16px;
+
+      .letGodBaike-list-ul {
+        .letGodBaike-list-ul-title {
+          width: 67px;
+          padding: 3px 0;
+          text-align: center;
+          background: #f96e31;
+          border-radius: 2px;
+          font-size: 10px;
+          color: #fff;
+          margin-top: 18px;
+          user-select: none;
+        }
+
+        .letGodBaike-list-ul-li {
+          display: flex;
+          flex-wrap: wrap;
+          align-items: center;
+          justify-content: space-between;
+
+          .letGodBaike-list-ul-li-item {
+            margin-top: 8px;
+            width: 110px;
+            background: #f6f8f9;
+            border-radius: 2px;
+            font-size: 14px;
+            color: #333333;
+            padding: 5px 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            user-select: none;
+
+            &:active {
+              background: #f2f2f2;
+            }
+          }
+        }
+      }
+    }
+
+    // 到顶
+    .letGodBaike-up {
+      width: 112px;
+      height: 122px;
+      position: fixed;
+      bottom: 24px;
+      right: 0px;
+      background: url('~@/assets/imgs/leiGodApp/leiGodBaike_up.png') center
+        center no-repeat;
+    }
+  }
+}
+</style>

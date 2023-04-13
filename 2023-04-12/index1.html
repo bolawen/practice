@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      body {
+        box-sizing: border-box;
+        scroll-behavior: smooth;
+      }
+      .tab {
+        width: 400px;
+        height: 44px;
+        position: sticky;
+        top: 0;
+        background-color: #fff;
+      }
+      .tab-scroll-container {
+        width: 100%;
+        height: 100%;
+        gap: 24px;
+        display: flex;
+        overflow-x: auto;
+        align-items: center;
+        scroll-behavior: smooth;
+        justify-content: flex-start;
+      }
+      .tab-scroll-container::-webkit-scrollbar {
+        display: none;
+      }
+      .tab-item {
+        display: inline-block;
+        background: bisque;
+        border-radius: 20px;
+        padding: 3px 32px;
+        color: #000;
+        text-decoration: none;
+      }
+      .tab-item.active {
+        background: #000;
+        color: #fff;
+      }
+      .a {
+        width: 200px;
+      }
+      .content {
+        width: 400px;
+      }
+      .content-scroll-container {
+        width: 100%;
+        height: 100%;
+      }
+      .content-item {
+        padding-top: 44px;
+        box-sizing: border-box;
+      }
+      .a {
+        width: 100%;
+        height: 200px;
+        background-color: red;
+      }
+      .b {
+        width: 100%;
+        height: 300px;
+        background-color: yellow;
+      }
+      .c {
+        width: 100%;
+        height: 400px;
+        background-color: brown;
+      }
+      .d {
+        width: 100%;
+        height: 500px;
+        background-color: black;
+      }
+      .e {
+        width: 100%;
+        height: 600px;
+        background-color: green;
+      }
+      .f {
+        width: 100%;
+        height: 200px;
+        background-color: blueviolet;
+      }
+      .g {
+        width: 100%;
+        height: 100px;
+        background-color: aqua;
+      }
+      .h {
+        width: 100%;
+        height: 400px;
+        background-color: cadetblue;
+      }
+      .placeholder {
+        width: 100%;
+        height: 0px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="tab">
+      <div class="tab-scroll-container">
+        <a class="tab-item" href="#a">a</a>
+        <a class="tab-item" href="#b">b</a>
+        <a class="tab-item" href="#c">c</a>
+        <a class="tab-item" href="#d">d</a>
+        <a class="tab-item" href="#e">e</a>
+        <a class="tab-item" href="#f">f</a>
+        <a class="tab-item" href="#g">g</a>
+        <a class="tab-item" href="#h">h</a>
+      </div>
+    </div>
+    <div class="content">
+      <div class="content-scroll-container">
+        <div id="a" class="content-item a">a</div>
+        <div id="b" class="content-item b">b</div>
+        <div id="c" class="content-item c">c</div>
+        <div id="d" class="content-item d">d</div>
+        <div id="e" class="content-item e">e</div>
+        <div id="f" class="content-item f">f</div>
+        <div id="g" class="content-item g">g</div>
+        <div id="h" class="content-item h">h</div>
+        <div class="placeholder"></div>
+      </div>
+    </div>
+    <script>
+      function computedScrollTabItemOffsetLeft(elementContainer, element) {
+        return (
+          element.offsetLeft -
+          elementContainer.offsetWidth / 2 +
+          element.offsetWidth / 2
+        );
+      }
+
+      function scrollTabItem(
+        elementContainer,
+        elementScrollContainer,
+        element
+      ) {
+        const { offsetWidth, offsetLeft } = element;
+        const scrollLeft = computedScrollTabItemOffsetLeft(
+          elementContainer,
+          element
+        );
+        elementScrollContainer.scroll({ left: scrollLeft, behavior: "smooth" });
+      }
+
+      function setTabItemActive(elementList, currentElement) {
+        elementList.forEach((element) => {
+          element.classList.remove("active");
+        });
+        currentElement.classList.add("active");
+      }
+
+      const content = document.querySelector(".content");
+      const placeholder = document.querySelector(".placeholder");
+      placeholder.style.height = content.offsetHeight + "px";
+
+      const tabItemList = document.querySelectorAll(".tab-item");
+      const tabContainer = document.querySelector(".tab");
+      const tabScrollContainer = document.querySelector(
+        ".tab-scroll-container"
+      );
+
+      tabScrollContainer.addEventListener("click", (e) => {
+        const target = e.target;
+        if (target.nodeName === "A") {
+          setTabItemActive(tabItemList, target);
+          const { offsetWidth, offsetLeft } = target;
+          scrollTabItem(tabContainer, tabScrollContainer, target);
+        }
+      });
+    </script>
+  </body>
+</html>

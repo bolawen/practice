@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      .tab {
+        width: 400px;
+        height: 44px;
+        position: sticky;
+        top: 0;
+        background-color: #fff;
+      }
+      .tab-scroll-container {
+        gap: 24px;
+        display: flex;
+        overflow-x: auto;
+        align-items: center;
+        scroll-behavior: smooth;
+        justify-content: flex-start;
+      }
+       .tab-scroll-container::-webkit-scrollbar {
+        display: none;
+      }
+      .tab-item {
+        display: inline-block;
+        background: bisque;
+        border-radius: 20px;
+        padding: 3px 32px;
+        color: #000;
+        text-decoration: none;
+      }
+      .tab-item.active {
+        background: #000;
+        color: #fff;
+      }
+      .a {
+        width: 200px;
+      }
+      .content{
+        width: 400px;
+        height: 800px;
+      }
+      .content-scroll-container{
+        width: 100%;
+        height:100%;
+        overflow-y: auto;
+        scroll-behavior: smooth;
+      }
+      .a {
+        width: 100%;
+        height: 200px;
+        background-color: red;
+      }
+      .b {
+        width: 100%;
+        height: 300px;
+        background-color: yellow;
+      }
+      .c {
+        width: 100%;
+        height: 400px;
+        background-color: brown;
+      }
+      .d {
+        width: 100%;
+        height: 500px;
+        background-color: black;
+      }
+      .e {
+        width: 100%;
+        height: 600px;
+        background-color: green;
+      }
+      .f {
+        width: 100%;
+        height: 200px;
+        background-color: blueviolet;
+      }
+      .g {
+        width: 100%;
+        height: 100px;
+        background-color: aqua;
+      }
+      .h {
+        width: 100%;
+        height: 400px;
+        background-color: cadetblue;
+      }
+      .empty {
+        width: 100%;
+        height: 600px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="tab">
+      <div class="tab-scroll-container">
+        <a class="tab-item" href="#a">a</a>
+        <a class="tab-item" href="#b">b</a>
+        <a class="tab-item" href="#c">c</a>
+        <a class="tab-item" href="#d">d</a>
+        <a class="tab-item" href="#e">e</a>
+        <a class="tab-item" href="#f">f</a>
+        <a class="tab-item" href="#g">g</a>
+        <a class="tab-item" href="#h">h</a>
+      </div>
+    </div>
+    <div class="content">
+      <div class="content-scroll-container">
+        <a name="a" class="a">a内容</a>
+        <a name="b" class="b">b内容</a>
+        <a name="c" class="c">c内容</a>
+        <a name="d" class="d">d内容</a>
+        <a name="e" class="e">e内容</a>
+        <a name="f" class="f">f内容</a>
+        <a name="g" class="g">g内容</a>
+        <a name="h" class="h">h内容</a>
+      </div>
+    </div>
+  </body>
+</html>
