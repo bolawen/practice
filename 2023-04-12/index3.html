@@ -246,27 +246,41 @@
         setTabItemActive(tab, tabScroll, tabItemList, tabItemList[0]);
       }
 
-      const handleTabItemClick = _.debounce(()=>{
-        const target = e.target;
-        if (target.className.indexOf("tab-scroll-container") === -1) {
-          const index = findTabItemIndex(target);
-          setTabItemActive(tab, tabScroll, tabItemList, target);
-          scrollContentItem(content, contentScroll, index);
+      const handleTabItemClick = _.debounce(
+        (e) => {
+          const target = e.target;
+          if (target.className.indexOf("tab-scroll-container") === -1) {
+            const index = findTabItemIndex(target);
+            setTabItemActive(tab, tabScroll, tabItemList, target);
+            scrollContentItem(content, contentScroll, index);
+          }
+        },
+        50,
+        {
+          leading: false,
+          trailing: true,
         }
-      })
+      );
 
-      function handleContentScroll(e) {
-        const { target } = e;
-        if (target.id === "content-scroll-container") {
-          const contentOffsetTop = getContentOffsetTop(content);
-          const top = contentOffsetTop + target.scrollTop;
-          const index = findContentItemIndex(top, rangeList);
-          setTabItemActive(tab, tabScroll, tabItemList, tabItemList[index]);
+      const handleContentScroll = _.debounce(
+        (e) => {
+          const { target } = e;
+          if (target.id === "content-scroll-container") {
+            const contentOffsetTop = getContentOffsetTop(content);
+            const top = contentOffsetTop + target.scrollTop;
+            const index = findContentItemIndex(top, rangeList);
+            setTabItemActive(tab, tabScroll, tabItemList, tabItemList[index]);
+          }
+        },
+        50,
+        {
+          leading: false,
+          trailing: true,
         }
-      }
+      );
 
       init();
-      tabScroll.addEventListener("click", _.debounce(handleTabItemClick));
+      tabScroll.addEventListener("click", handleTabItemClick);
       window.addEventListener("scroll", handleContentScroll, true);
     </script>
   </body>
