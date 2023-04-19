@@ -1,21 +1,15 @@
 <template>
-  <div>
-    <button v-on:click="event">点击</button>
-  </div>
+  <div></div>
 </template>
 
 <script>
 export default {
   name: "App",
   data() {
-    return {
-      event: "handleClick"
-    };
+    return {};
   },
-  methods: {
-    handleClick($event) {
-      console.log($event);
-    },
+  mounted() {
   },
+  methods: {},
 };
 </script>
