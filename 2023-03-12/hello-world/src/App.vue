@@ -1,42 +1,21 @@
 <template>
   <div>
-    <HelloWorld></HelloWorld>
-    <button @click="addNum">App 组件 增加 State.Num</button>
-    <button @click="addListItem">App 组件 增加 State.List</button>
+    <AComp ref="aComp">
+      <template v-slot:body1="slotProps1">
+        {{ slotProps1.body1Info.text }}
+      </template>
+      <template v-slot:body2="slotProps2">
+        {{ slotProps2.body2Info.text }}
+      </template>
+    </AComp>
   </div>
 </template>
 
 <script>
-import HelloWorld from "./HelloWorld.vue";
+import AComp from "./aComp.vue";
 
 export default {
   name: "App",
-  components: {
-    HelloWorld,
-  },
-  data() {
-    return {
-      state: {
-        num: 0,
-        list: [],
-      },
-    };
-  },
-  provide() {
-    return {
-      state: this.state,
-      addNum: this.addNum,
-      addListItem: this.addListItem
-    };
-  },
-  methods: {
-    addNum() {
-      this.state.num = this.state.num + 1;
-    },
-    addListItem(){
-      const item = this.state.num;
-      this.state.list.push(item)
-    }
-  },
+  components: { AComp },
 };
 </script>
