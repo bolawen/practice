@@ -1,21 +1,46 @@
 <template>
   <div>
-    <AComp ref="aComp">
-      <template v-slot:body1="slotProps1">
-        {{ slotProps1.body1Info.text }}
-      </template>
-      <template v-slot:body2="slotProps2">
-        {{ slotProps2.body2Info.text }}
-      </template>
-    </AComp>
+    <div>
+      <button @click="prev">上一步</button>
+      <button @click="next">下一步</button>
+    </div>
+    <keep-alive>
+      <component :is="stepComponent"></component>
+    </keep-alive>
   </div>
 </template>
 
 <script>
-import AComp from "./aComp.vue";
+import Step1 from "./step1.vue";
+import Step2 from "./step2.vue";
+import Step3 from "./step3.vue";
 
 export default {
   name: "App",
-  components: { AComp },
+  components: {
+    Step1,
+    Step2,
+    Step3,
+  },
+  data() {
+    return {
+      step: 1,
+    };
+  },
+  computed: {
+    stepComponent() {
+      return "step" + this.step;
+    },
+  },
+  methods: {
+    prev() {
+      if (this.step > 1) {
+        this.step -= 1;
+      }
+    },
+    next() {
+      this.step += 1;
+    },
+  },
 };
 </script>

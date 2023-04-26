@@ -1,26 +1,21 @@
 <template>
   <div>
     <h3>A 组件 Header</h3>
-    <slot name="body1" :slotProps1="body1Info"></slot>
-    <slot name="body2" :slotProps2="body2Info"></slot>
-    <slot name="body3">A 组件 Body3 默认内容</slot>
+    <slot name="body1" :a="a" :b="b" :c="c">body1 插槽默认内容</slot>
+    <slot name="body2" :a="a" :b="b" :c="c">body2 插槽默认内容</slot>
     <p>A 组件 Footer</p>
   </div>
 </template>
 
 <script>
-
 export default {
   name: "AComp",
-  data(){
+  data() {
     return {
-      body1Info:{
-        text: "哈哈哈"
-      },
-      body2Info:{
-        text: "嘻嘻嘻"
-      }
-    }
-  }
+      a: 1,
+      b: 2,
+      c: 3,
+    };
+  },
 };
 </script>
