@@ -1,8 +1,5 @@
 <template>
-  <div>
-    <h3>第二步</h3>
-    <input v-model="str" />
-  </div>
+  <div class="step2">第二步</div>
 </template>
 <script>
 export default {
@@ -14,3 +11,11 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.step2 {
+  width: 100%;
+  height: 100%;
+  background-color: rgb(130, 202, 79);
+}
+</style>

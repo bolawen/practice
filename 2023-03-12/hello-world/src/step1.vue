@@ -1,8 +1,5 @@
 <template>
-  <div>
-    <h3>第一步</h3>
-    <input v-model="str" />
-  </div>
+  <div class="step1">第一步</div>
 </template>
 <script>
 export default {
@@ -11,6 +8,13 @@ export default {
     return {
       str: "",
     };
-  }
+  },
 };
 </script>
+<style scoped>
+.step1 {
+  width: 100%;
+  height: 100%;
+  background-color: aqua;
+}
+</style>

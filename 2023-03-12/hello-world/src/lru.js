@@ -25,7 +25,7 @@ class LRUCache {
   get(key) {
     const cache = this.cache[key];
     if (!cache) {
-      return {};
+      return null;
     }
     this.moveToHead(key);
     return cache;
