@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      .tab {
+        width: 400px;
+        height: 44px;
+        position: sticky;
+        top: 0;
+        background-color: #fff;
+      }
+      .tab-scroll-container {
+        gap: 24px;
+        display: flex;
+        overflow-x: auto;
+        align-items: center;
+        justify-content: flex-start;
+      }
+      .tab-scroll-container::-webkit-scrollbar {
+        display: none;
+      }
+      .tab-item {
+        display: inline-block;
+        background: bisque;
+        border-radius: 20px;
+        padding: 3px 32px;
+        color: #000;
+        text-decoration: none;
+        cursor: pointer;
+      }
+      .tab-item.active {
+        background: #000;
+        color: #fff;
+      }
+      .a {
+        width: 200px;
+      }
+      .content {
+        width: 400px;
+        height: 800px;
+      }
+      .content-scroll-container {
+        width: 100%;
+        height: 100%;
+        overflow-y: auto;
+      }
+      .a {
+        width: 100%;
+        height: 200px;
+        background-color: red;
+      }
+      .b {
+        width: 100%;
+        height: 300px;
+        background-color: yellow;
+      }
+      .c {
+        width: 100%;
+        height: 400px;
+        background-color: brown;
+      }
+      .d {
+        width: 100%;
+        height: 500px;
+        background-color: black;
+      }
+      .e {
+        width: 100%;
+        height: 600px;
+        background-color: green;
+      }
+      .f {
+        width: 100%;
+        height: 200px;
+        background-color: blueviolet;
+      }
+      .g {
+        width: 100%;
+        height: 100px;
+        background-color: aqua;
+      }
+      .h {
+        width: 100%;
+        height: 400px;
+        background-color: cadetblue;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="tab">
+      <div class="tab-scroll-container">
+        <div id="tab-a" class="tab-item">a</div>
+        <div id="tab-b" class="tab-item">b</div>
+        <div id="tab-c" class="tab-item">c</div>
+        <div id="tab-d" class="tab-item">d</div>
+        <div id="tab-e" class="tab-item">e</div>
+        <div id="tab-f" class="tab-item">f</div>
+        <div id="tab-g" class="tab-item">g</div>
+        <div id="tab-h" class="tab-item">h</div>
+      </div>
+    </div>
+    <div class="content">
+      <div id="content-scroll-container" class="content-scroll-container">
+        <div id="content-a" class="a">a</div>
+        <div id="content-b" class="b">b</div>
+        <div id="content-c" class="c">c</div>
+        <div id="content-d" class="d">d</div>
+        <div id="content-e" class="e">e</div>
+        <div id="content-f" class="f">f</div>
+        <div id="content-g" class="g">g</div>
+        <div id="content-h" class="h">h</div>
+        <div id="content-i" class="empty"></div>
+      </div>
+    </div>
+    <script>
+      let scrollTimer = null;
+      let isAllowListener = true;
+      const tab = document.querySelector(".tab");
+      const tabScroll = document.querySelector(".tab-scroll-container");
+      const tabItemList = document.querySelectorAll(".tab-item");
+      const content = document.querySelector(".content");
+      const contentScroll = document.querySelector(".content-scroll-container");
+      const rangeList = getContentItemRange(content, contentScroll.children);
+
+      function getContentOffsetTop(element) {
+        return element.offsetTop;
+      }
+
+      function getContentItemOffsetTop(element) {
+        return element.offsetTop;
+      }
+
+      function getContentItemRange(element, elementChildren) {
+        const rangeList = Array.from(elementChildren).reduce(
+          (range, elementItem, index) => {
+            let startOffsetTop = 0;
+            if (index === 0) {
+              range.push(startOffsetTop);
+              return range;
+            }
+            startOffsetTop = getContentItemOffsetTop(elementItem);
+            range.push(startOffsetTop);
+            return range;
+          },
+          []
+        );
+        return rangeList.map((range, index) => {
+          if (index === rangeList.length - 1) {
+            return [range];
+          }
+          return [range, rangeList[index + 1]];
+        });
+      }
+
+      function findTabItemIndex(target) {
+        return Array.from(tabItemList).findIndex(
+          (tabItem) => tabItem.id === target.id
+        );
+      }
+
+      function findContentItemIndex(scrollTop, rangeList) {
+        let index = 0;
+        let isFirstFind = false;
+        rangeList.forEach((rangeItem, rangeIndex) => {
+          if (!isFirstFind) {
+            if (
+              rangeIndex === rangeList.length - 1 &&
+              scrollTop >= rangeItem[0]
+            ) {
+              index = rangeIndex;
+              isFirstFind = true;
+            } else if (scrollTop >= rangeItem[0] && scrollTop < rangeItem[1]) {
+              index = rangeIndex;
+              isFirstFind = true;
+            }
+          }
+        });
+        return index;
+      }
+
+      function computedScrollTabItemOffsetLeft(elementContainer, element) {
+        return (
+          element.offsetLeft -
+          elementContainer.offsetWidth / 2 +
+          element.offsetWidth / 2
+        );
+      }
+
+      const setTabItemActive = (
+        elementContainer,
+        elementScrollContainer,
+        elementList,
+        currentElement
+      ) => {
+        elementList.forEach((element) => {
+          element.classList.remove("active");
+        });
+        currentElement.classList.add("active");
+        scrollTabItem(elementContainer, elementScrollContainer, currentElement);
+      };
+
+      function scrollTabItem(
+        elementContainer,
+        elementScrollContainer,
+        element
+      ) {
+        const { offsetWidth, offsetLeft } = element;
+        const scrollLeft = computedScrollTabItemOffsetLeft(
+          elementContainer,
+          element
+        );
+        elementScrollContainer.scroll({ left: scrollLeft, behavior: "smooth" });
+      }
+
+      function scrollContentItem(
+        elementContainer,
+        elementScrollContainer,
+        index
+      ) {
+        const range = rangeList[index];
+        elementScrollContainer.scroll({
+          top: range[0] - elementContainer.offsetTop,
+          behavior: "smooth",
+        });
+      }
+
+      function init() {
+        setTabItemActive(tab, tabScroll, tabItemList, tabItemList[0]);
+      }
+
+      const handleTabItemClick = (e) => {
+        const target = e.target;
+        if (target.className.indexOf("tab-scroll-container") === -1) {
+          isAllowListener = false;
+          const index = findTabItemIndex(target);
+          setTabItemActive(tab, tabScroll, tabItemList, target);
+          scrollContentItem(content, contentScroll, index);
+        }
+      };
+
+      const handleContentScroll = (e) => {
+        const { target } = e;
+        if (target.id === "content-scroll-container") {
+
+          clearTimeout(scrollTimer);
+          scrollTimer = setTimeout(() => {
+            if (!isAllowListener) {
+              isAllowListener = true;
+            }
+          }, 100);
+
+          if (isAllowListener) {
+            const contentOffsetTop = getContentOffsetTop(content);
+            const top = contentOffsetTop + target.scrollTop;
+            const index = findContentItemIndex(top, rangeList);
+            setTabItemActive(tab, tabScroll, tabItemList, tabItemList[index]);
+          }
+        }
+      };
+
+      init();
+      tabScroll.addEventListener("click", handleTabItemClick);
+      window.addEventListener("scroll", handleContentScroll, true);
+    </script>
+  </body>
+</html>
