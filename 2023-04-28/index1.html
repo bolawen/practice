@@ -242,6 +242,10 @@
         }
       };
 
+      const isScrollBottom = (dom)=>{
+        return dom.scrollHeight < dom.scrollTop + dom.clientHeight;
+      }
+
       const handleContentScroll = (e) => {
         const { target } = e;
         if (target.id === "content-scroll-container") {
@@ -257,7 +261,10 @@
             const contentOffsetTop = getContentOffsetTop(content);
             const top = contentOffsetTop + target.scrollTop;
             const index = findContentItemIndex(top, rangeList);
-            setTabItemActive(tab, tabScroll, tabItemList, tabItemList[index]);
+
+            if(!isScrollBottom(target)){
+              setTabItemActive(tab, tabScroll, tabItemList, tabItemList[index]);
+            }
           }
         }
       };
