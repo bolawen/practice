@@ -1,35 +1,37 @@
 <template>
-  <div>
-    <ul>
-      <li :key="item.id" v-for="item in list" :ref="(el) => setListItemRef(el, item.id)">
-        {{ item.name }}
-      </li>
-    </ul>
-  </div>
+  <div></div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import usePolling from './composables/usePolling'
+import usePreparePolling from './composables/usePreparePolling'
 
-const list = ref([
-  {
-    id: 1,
-    name: '哈哈'
-  },
-  {
-    id: 2,
-    name: '嘻嘻'
-  },
-  {
-    id: 3,
-    name: '呵呵'
-  }
-])
-
-const listItemRef = ref<{ [key: number]: any }[]>([])
-
-const setListItemRef = (dom: any, id: number) => {
-  listItemRef.value.push({ [id]: dom })
-  console.log(listItemRef)
+function sendData(): Promise<{ data: { status: number } }> {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      console.log('sendData')
+      resolve({ data: { status: 1 } })
+    }, 2000)
+  })
 }
+
+function getResult(): Promise<{ data: { status: number } }> {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      console.log('getResult')
+      resolve({ data: { status: 0 } })
+    }, 2000)
+  })
+}
+
+function finishedCallback() {
+  console.log('接口完成啦')
+}
+
+await sendData()
+
+const preparePolling = usePreparePolling(getResult, finishedCallback)
+const [startPolling] = usePolling(preparePolling)
+
+startPolling()
 </script>
