@@ -4,13 +4,13 @@ export default function usePolling(
   cb: () => Promise<boolean>,
   timeout = 1000
 ): [startPolling: () => void, endPolling: () => void] {
-  let timer: any
   const countTime = ref(0)
+  const timer: any = ref(null)
 
   const stopWatch = watch(countTime, () => {
     if (countTime.value > 0) {
-      clearTimeout(timer)
-      timer = setTimeout(() => {
+      clearTimeout(timer.value)
+      timer.value = setTimeout(() => {
         cb()
           .then((res) => {
             if (res) {

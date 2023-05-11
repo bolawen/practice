@@ -1,13 +1,17 @@
 export default function usePreparePolling(
-  pollRequest: () => Promise<{ data: { status: number } }>,
+  getResultRequest: () => Promise<{ data: { status: number } }>,
   finishedCallback: () => void
 ) {
   return async function () {
-    const result = await pollRequest()
-    if (!result.data.status) {
-      return true
-    } else {
-      finishedCallback()
+    try {
+      const result = await getResultRequest()
+      if (!result.data.status) {
+        return true
+      } else {
+        finishedCallback()
+        return false
+      }
+    } catch (error: any) {
       return false
     }
   }
