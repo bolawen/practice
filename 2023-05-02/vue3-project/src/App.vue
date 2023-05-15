@@ -1,6 +1,7 @@
 <template>
   <div>
-    {{ state.count }}
+    {{ store.a }}
+    {{ store.countA }}
 
     <Child></Child>
   </div>
@@ -8,5 +9,6 @@
 
 <script setup lang="ts">
 import Child from './Child.vue'
-import { state } from './stores/reactive'
+import { useGlobalState } from './stores/useGlobalState';
+const store = useGlobalState();
 </script>

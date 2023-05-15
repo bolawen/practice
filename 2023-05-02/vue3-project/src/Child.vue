@@ -1,15 +1,12 @@
 <template>
   <div>
-    {{ state.count }}
+    {{ store.a }}
 
-    <button @click="changeCount">按钮</button>
+    <button @click="store.setA(10)">按钮</button>
   </div>
 </template>
 
 <script setup lang="ts">
-import { state } from './stores/reactive'
-
-const changeCount = () => {
-  state.count += 1
-}
+import { useGlobalState } from './stores/useGlobalState';
+const store = useGlobalState();
 </script>
