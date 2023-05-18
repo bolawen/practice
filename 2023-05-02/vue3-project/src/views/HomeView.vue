@@ -1,13 +1,7 @@
 <template>
   <div>
-    <button @click="say">按钮</button>
+    <h1>首页</h1>
   </div>
 </template>
 
-<script setup lang="ts">
-const emit = defineEmits(['say']);
-
-const say = ()=>{
-  emit('say',"哈哈哈");
-}
-</script>
+<script setup lang="ts"></script>

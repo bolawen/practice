@@ -1,8 +1,6 @@
 <template>
   <div>
-    {{ store.a }}
-
-    <button @click="store.setA(10)">按钮</button>
+   
   </div>
 </template>
 
