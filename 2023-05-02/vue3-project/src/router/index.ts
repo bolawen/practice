@@ -10,19 +10,13 @@ const routes = [
   {
     path: "/about",
     name: "about",
-    component: ()=> import('../views/AboutView.vue'),
-    children: [
-      {
-        path: "",
-        name: "content",
-        component: ()=> import('../views/AboutContent.vue')
-      },
-      {
-        path: "more",
-        name: "more",
-        component: ()=> import('../views/MoreView.vue')
-      }
-    ]
+    component: ()=> import('../views/AboutView.vue')
+  },
+  {
+    path: '/other',
+    redirect: (to)=>{
+      return '/'
+    }
   }
 ]
 
