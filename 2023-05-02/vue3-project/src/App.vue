@@ -2,7 +2,8 @@
   <div>
     <router-link to="/">首页</router-link>
     <router-link to="/about">关于</router-link>
-    <router-link to="/about/more">更多</router-link>
+    <router-link to="/home">Home</router-link>
+    <router-link to="/home1">Home 1</router-link>
 
     <button @click="jump">关于</button>
 
