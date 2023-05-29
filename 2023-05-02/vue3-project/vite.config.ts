@@ -10,5 +10,18 @@ export default defineConfig({
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
     }
+  },
+  build:{
+    rollupOptions:{
+      output:{
+        manualChunks:{
+          'test': [
+            './src/views/ListView.vue',
+            './src/views/DetailView.vue',
+            './src/views/AboutView.vue'
+          ]
+        }
+      }
+    }
   }
 })
