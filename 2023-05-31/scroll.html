@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      .box {
+        width: 100%;
+      }
+      .box img {
+        display: block;
+        width: 400px;
+        height: 400px;
+        object-fit: cover;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="box">
+      <img
+        src=""
+        class="lazy-load-img"
+        data-src="https://bolawen.github.io/resource/image/blog/10.png"
+      />
+      <img
+        src=""
+        class="lazy-load-img"
+        data-src="https://bolawen.github.io/resource/image/blog/11.png"
+      />
+      <img
+        src=""
+        class="lazy-load-img"
+        data-src="https://bolawen.github.io/resource/image/blog/12.png"
+      />
+      <img
+        src=""
+        class="lazy-load-img"
+        data-src="https://bolawen.github.io/resource/image/blog/13.png"
+      />
+      <img
+        src=""
+        class="lazy-load-img"
+        data-src="https://bolawen.github.io/resource/image/blog/14.png"
+      />
+      <img
+        src=""
+        class="lazy-load-img"
+        data-src="https://bolawen.github.io/resource/image/blog/15.png"
+      />
+      <img
+        src=""
+        class="lazy-load-img"
+        data-src="https://bolawen.github.io/resource/image/blog/16.png"
+      />
+      <img
+        src=""
+        class="lazy-load-img"
+        data-src="https://bolawen.github.io/resource/image/blog/17.png"
+      />
+      <img
+        src=""
+        class="lazy-load-img"
+        data-src="https://bolawen.github.io/resource/image/blog/18.png"
+      />
+      <img
+        src=""
+        class="lazy-load-img"
+        data-src="https://bolawen.github.io/resource/image/blog/19.png"
+      />
+      <img
+        src=""
+        class="lazy-load-img"
+        data-src="https://bolawen.github.io/resource/image/blog/20.png"
+      />
+      <img
+        src=""
+        class="lazy-load-img"
+        data-src="https://bolawen.github.io/resource/image/blog/21.png"
+      />
+      <img
+        src=""
+        class="lazy-load-img"
+        data-src="https://bolawen.github.io/resource/image/blog/22.png"
+      />
+      <img
+        src=""
+        class="lazy-load-img"
+        data-src="https://bolawen.github.io/resource/image/blog/23.png"
+      />
+      <img
+        src=""
+        class="lazy-load-img"
+        data-src="https://bolawen.github.io/resource/image/blog/24.png"
+      />
+      <img
+        src=""
+        class="lazy-load-img"
+        data-src="https://bolawen.github.io/resource/image/blog/25.png"
+      />
+      <img
+        src=""
+        class="lazy-load-img"
+        data-src="https://bolawen.github.io/resource/image/blog/26.png"
+      />
+      <img
+        src=""
+        class="lazy-load-img"
+        data-src="https://bolawen.github.io/resource/image/blog/27.png"
+      />
+      <img
+        src=""
+        class="lazy-load-img"
+        data-src="https://bolawen.github.io/resource/image/blog/28.png"
+      />
+      <img
+        src=""
+        class="lazy-load-img"
+        data-src="https://bolawen.github.io/resource/image/blog/29.png"
+      />
+      <img
+        src=""
+        class="lazy-load-img"
+        data-src="https://bolawen.github.io/resource/image/blog/30.png"
+      />
+    </div>
+
+    <script>
+      let index = 0;
+      const lazyLoadImgList = document.querySelectorAll(".lazy-load-img");
+
+      function throttle(fn, wait) {
+        let timer = null;
+        return function (...args) {
+          const context = this;
+          if (!timer) {
+            timer = setTimeout(() => {
+              clearTimeout(timer);
+              timer = null;
+              fn.apply(context, args);
+            }, wait);
+          }
+        };
+      }
+
+      function isVisible(
+        viewPortHeight,
+        viewportScrollTop,
+        targetDomOffsetTop
+      ) {
+        return viewPortHeight + viewportScrollTop >= targetDomOffsetTop;
+      }
+
+      function handleScroll() {
+        const viewPortHeight =
+          window.innerHeight ||
+          document.documentElement.clientHeight ||
+          document.body.clientHeight;
+        const viewportScrollTop =
+          document.documentElement.scrollTop ||
+          window.pageYOffset ||
+          document.body.scrollTop;
+        const { length } = lazyLoadImgList;
+        for (let i = index; i < length; i++) {
+          const lazyLoadImgItem = lazyLoadImgList[i];
+          if (
+            isVisible(
+              viewPortHeight,
+              viewportScrollTop,
+              lazyLoadImgItem.offsetTop
+            )
+          ) {
+            const src = lazyLoadImgItem.getAttribute("data-src");
+            lazyLoadImgItem.src = src;
+            index++;
+          }
+        }
+      }
+
+      handleScroll();
+      window.addEventListener("scroll", throttle(handleScroll, 80));
+    </script>
+  </body>
+</html>
