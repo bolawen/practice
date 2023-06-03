@@ -11,6 +11,8 @@
 
     <button id="button-img">Img 埋点</button>
 
+    <button id="button-sendBeacon">SendBeacon 埋点</button>
+
     <script>
       function buryingPointByAjax(type) {
         return new Promise((resolve, reject) => {
@@ -36,8 +38,29 @@
 
       function buryingPointByImg(type) {
         const img = new Image();
-        img.src = `/server/buryingPoint/img?type=${type}&url=img&device=pc`
+        img.src = `/server/buryingPoint/img?type=${type}&url=img&device=pc`;
       }
+
+      function buryingPointBySendBeacon(type) {
+        const params = JSON.stringify({
+          type,
+          url: "sendBeacon",
+          device: "pc",
+        });
+        const result = navigator.sendBeacon(
+          "/server/buryingPoint/sendBeacon",
+          params
+        );
+        console.log(result);
+      }
+
+      function handleVisibilitychange() {
+        if (document.visibilityState === "hidden") {
+          buryingPointBySendBeacon();
+        }
+      }
+
+      document.addEventListener("visibilitychange", handleVisibilitychange);
     </script>
     <script>
       const button = document.querySelector("#button");
@@ -48,6 +71,11 @@
       const buttonImg = document.querySelector("#button-img");
       buttonImg.addEventListener("click", function () {
         buryingPointByImg("img");
+      });
+
+      const buttonSendBeacon = document.querySelector("#button-sendBeacon");
+      buttonSendBeacon.addEventListener("click", function () {
+        buryingPointBySendBeacon("sendBeacon");
       });
     </script>
   </body>
