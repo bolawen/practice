@@ -1,9 +1,15 @@
-import VirtualList from "./component/VirtualList/virtualList";
+import React, { Suspense } from "react";
+
+const VirtualList = React.lazy(
+  () => import("./component/VirtualList/virtualList")
+);
 
 function App() {
   return (
     <div>
-      <VirtualList />
+      <Suspense fallback={<></>}>
+        <VirtualList />
+      </Suspense>
     </div>
   );
 }
