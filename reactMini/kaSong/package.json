@@ -1,0 +1,25 @@
+{
+  "name": "kaSong",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "build": "rollup -c",
+    "dev": "rollup -c -w"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^25.0.0",
+    "@rollup/plugin-node-resolve": "^15.1.0",
+    "rollup": "^3.23.1",
+    "tslib": "^2.5.3"
+  },
+  "dependencies": {
+    "@rollup/plugin-alias": "^5.1.0",
+    "cross-env": "^7.0.3",
+    "scheduler": "^0.23.0"
+  }
+}

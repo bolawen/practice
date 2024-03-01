@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>getUserMedia 音频录制</title>
+  </head>
+  <body>
+    <div class="operation">
+      <button id="start-record">录制</button>
+      <button id="stop-record">停止</button>
+    </div>
+    <div class="audio-container">
+      <audio id="audio" controls></aud>
+    </div>
+    <script>
+      let mediaRecorder = null;
+      const recordedBlobs = [];
+      const audio = document.getElementById('audio');
+      const startRecordEl = document.getElementById('start-record');
+      const stopRecordEl = document.getElementById('stop-record');
+
+      function startRecord() {
+        const timeSlice = 5000;
+        mediaRecorder.start(timeSlice);
+      }
+
+      async function stopRecord() {
+        mediaRecorder.stop();
+        const audioBlob = new Blob(recordedBlobs);
+        const audioUrl = URL.createObjectURL(audioBlob);
+        audio.src = audioUrl;
+      }
+
+      async function prepareRecord() {
+        const stream = await navigator.mediaDevices.getUserMedia({
+          audio: true
+        });
+
+        mediaRecorder = new MediaRecorder(stream);
+
+        mediaRecorder.ondataavailable = event => {
+          if (event.data && event.data.size > 0) {
+            recordedBlobs.push(event.data);
+          }
+        };
+      }
+
+      async function checkPermissions(name) {
+        try {
+          return await navigator.permissions.query({ name: name });
+        } catch (error) {
+          return false;
+        }
+      }
+
+      async function run() {
+        const microphone = await checkPermissions('microphone');
+        if (microphone.state === 'granted') {
+          prepareRecord();
+          startRecordEl.addEventListener('click', startRecord);
+          stopRecordEl.addEventListener('click', stopRecord);
+        } else {
+          alert('请允许使用麦克风');
+        }
+      }
+
+      run();
+    </script>
+  </body>
+</html>

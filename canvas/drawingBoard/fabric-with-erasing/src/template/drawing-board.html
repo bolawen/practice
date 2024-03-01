@@ -1,0 +1,77 @@
+<style>
+  canvas {
+    user-select: none;
+    touch-action: none; /* 防止绘制时浏览器滑动 */
+  }
+
+  .toolbar-container {
+    width: 600px;
+    gap: 24px;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 24px;
+    justify-content: flex-start;
+  }
+  .toolbar-item {
+    flex: none;
+    gap: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+  }
+  .toolbar-item_button.active {
+    color: #fff;
+    background-color: #384bc8;
+  }
+</style>
+
+<div class="drawing-board">
+  <div class="toolbar-container">
+    <div class="toolbar-item toolbar-item_stroke-color-picker">
+      <div class="label">stroke color</div>
+      <div class="color-picker">
+        <input id="stroke-color-picker" type="color" />
+      </div>
+    </div>
+    <div class="toolbar-item toolbar-item_fill-color-picker">
+      <div class="label">fill color</div>
+      <div class="color-picker">
+        <input id="fill-color-picker" type="color" />
+      </div>
+    </div>
+    <div class="toolbar-item toolbar-item_bg-color-picker">
+      <div class="label">bg color</div>
+      <div class="color-picker">
+        <input id="bg-color-picker" type="color" />
+      </div>
+    </div>
+    <div class="toolbar-item toolbar-item_line-size">
+      <div class="label">line size:</div>
+      <div class="value">1</div>
+      <input id="line-size" type="range" min="1" max="100" />
+    </div>
+    <div class="toolbar-item toolbar-item_font-size">
+      <div class="label">font size:</div>
+      <div class="value">1</div>
+      <input id="font-size" type="range" min="1" max="100" />
+    </div>
+    <button class="toolbar-item toolbar-item_button" id="text">text</button>
+    <button class="toolbar-item toolbar-item_button" id="brush">brush</button>
+    <button class="toolbar-item toolbar-item_button" id="line">line</button>
+    <button class="toolbar-item toolbar-item_button" id="rect">
+      rect
+    </button>
+    <button class="toolbar-item toolbar-item_button" id="circle">circle</button>
+    <button class="toolbar-item toolbar-item_button" id="eraser">eraser</button>
+    <button class="toolbar-item toolbar-item_button" id="move">move</button>
+    <button class="toolbar-item toolbar-item_button" id="undo">undo</button>
+    <button class="toolbar-item toolbar-item_button" id="redo">redo</button>
+    <button class="toolbar-item toolbar-item_button" id="zoomOut">zoomOut</button>
+    <button class="toolbar-item toolbar-item_button" id="zoomIn">zoomIn</button>
+    <button class="toolbar-item toolbar-item_button" id="clear">clear</button>
+    <button class="toolbar-item toolbar-item_button" id="save">save</button>
+  </div>
+
+  <canvas id="canvas"></canvas>
+</div>

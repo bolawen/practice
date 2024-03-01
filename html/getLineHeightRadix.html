@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+        .container{
+            line-height: 20px;
+        }
+    </style>
+  </head>
+  <body>
+    <div class="container">发来的康师傅简单来说付款了电视剧付了款电视机辅导老师咖啡机单身快乐发的酸辣粉发的酸辣粉肯定是发多少李逵负荆都是发的酸辣会计法</div>
+    <script>
+      function getCssValue(value) {
+        if(value.endsWith('%')){
+            return parseFloat(value) / 100.00;
+        }
+        return parseFloat(value);
+      }
+
+      function getLineHeightRadix(value, fontSize) {
+        if (value === 'normal') {
+          return 1.14;
+        } else if (value.endsWith('%')) {
+          return getCssValue(value);
+        } else if (
+          value.endsWith('px') ||
+          value.endsWith(/(vw|vh)/) ||
+          value.endsWith('em') || 
+          value.endsWith('rem')
+        ) {
+          return (getCssValue(value) / getCssValue(fontSize)).toFixed(2);
+        }
+        return value;
+      }
+
+      const containerDOM = document.querySelector('.container');
+      const style = getComputedStyle(containerDOM);
+      const radix = getLineHeightRadix(style.lineHeight,style.fontSize);
+      const lineHeight = radix * getCssValue(style.fontSize);
+      const row = Math.ceil(containerDOM.clientHeight / lineHeight);
+      console.log("row",row);
+    </script>
+  </body>
+</html>

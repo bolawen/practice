@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>React Mini KaSong use</title>
+    <script>
+      var process = {
+        env: {
+          NODE_ENV: 'development'
+        }
+      };
+    </script>
+    <script src="../dist/react.iife.js"></script>
+  </head>
+  <body>
+    <div id="root"></div>
+
+    <script>
+      const {
+        ReactDOM: { createRoot },
+        React: { useState, useContext, useEffect, createContext, createElement }
+      } = React;
+
+      const context = createContext();
+      console.log(context);
+
+      function Child() {
+        const ctx = useContext(context);
+        return createElement('div', null, ctx.a);
+      }
+
+      function App() {
+        const [value, setValue] = useState(0);
+        useEffect(() => {
+          setTimeout(() => {
+            setValue(2);
+          }, 3000);
+        }, []);
+        return createElement(
+          'div',
+          {},
+          createElement(
+            context.Provider,
+            { value: { a: value } },
+            createElement(Child)
+          )
+        );
+      }
+
+      const root = createRoot(document.getElementById('root'));
+      root.render(createElement(App));
+    </script>
+  </body>
+</html>

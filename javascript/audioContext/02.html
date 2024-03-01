@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>计算音频音量</title>
+  </head>
+  <body>
+    <div class="operation">
+      <button id="start-record">录制</button>
+      <button id="stop-record">停止</button>
+    </div>
+    <div class="video-container">
+      <audio id="audio" controls></audio>
+    </div>
+
+    <script>
+      let source = null;
+      let mediaRecorder = null;
+      const audioContext = new AudioContext(); // 创建音频上下文
+      const analyser = audioContext.createAnalyser(); // 创建音频分析器
+      analyser.fftSize = 2048;
+
+      const audio = document.getElementById('audio');
+      const stopRecordBtn = document.getElementById('stop-record');
+      const startRecordBtn = document.getElementById('start-record');
+
+      function watchVolume() {
+        const bufferLength = analyser.frequencyBinCount;
+        const dataArray = new Uint8Array(bufferLength);
+        analyser.getByteTimeDomainData(dataArray);
+        const volume =
+          dataArray.reduce((acc, cur) => acc + cur, 0) / bufferLength;
+        console.log(volume);
+        requestAnimationFrame(watchVolume);
+      }
+
+      async function prepareRecord() {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        mediaRecorder = new MediaRecorder(stream);
+        source = audioContext.createMediaStreamSource(stream);
+        source.connect(analyser);
+
+        audio.srcObject = stream;
+        audio.play();
+      }
+
+      function startRecord() {
+        mediaRecorder.start();
+        watchVolume();
+      }
+
+      function stopRecord() {
+        mediaRecorder.stop();
+      }
+
+      prepareRecord();
+
+      startRecordBtn.addEventListener('click', startRecord);
+      stopRecordBtn.addEventListener('click', stopRecord);
+    </script>
+  </body>
+</html>

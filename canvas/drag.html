@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>可拖拽的 Canvas 画布</title>
+    <style>
+      .canvas-container {
+        width: 600px;
+        height: 600px;
+      }
+
+      canvas {
+        user-select: none;
+        touch-action: none;
+        border: 1px solid black;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="canvas-container">
+      <canvas id="canvas"></canvas>
+    </div>
+
+    <script>
+      const canvasWrapper = document.querySelector('.canvas-container');
+      const wrapDomStyle = getComputedStyle(canvasWrapper);
+      const width = parseInt(wrapDomStyle.width, 10);
+      const height = parseInt(wrapDomStyle.height, 10);
+      const canvas = document.getElementById('canvas');
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext('2d');
+
+      const data = [];
+
+      let isDragging = false;
+      let activeShape = null;
+
+      let downXY = {
+        x: 0,
+        y: 0
+      };
+      let lastShapeXY = {
+        x: 0,
+        y: 0
+      };
+
+      let translateXY = {
+        x: 0,
+        y: 0
+      };
+      let lastTranslateXY = {
+        x: 0,
+        y: 0
+      };
+
+      const downInvoker = e => {
+        downInvoker?.value?.(e);
+      };
+      const moveInvoker = e => {
+        moveInvoker?.value?.(e);
+      };
+      const upInvoker = e => {
+        upInvoker?.value?.(e);
+      };
+      const leaveInvoker = e => {
+        leaveInvoker?.value?.(e);
+      };
+
+      function getRelativeOfElPosition(e, el) {
+        const normalizedE = e.type.startsWith('mouse') ? e : e.targetTouches[0];
+        const rect = el.getBoundingClientRect();
+        let x = normalizedE.pageX - rect.left - window.scrollX;
+        let y = normalizedE.pageY - rect.top - window.scrollY;
+        return [x, y];
+      }
+
+      function isInnerRect(x0, y0, width, height, x, y) {
+        return x0 <= x && y0 <= y && x0 + width >= x && y0 + height >= y;
+      }
+
+      function isInnerCircle(x0, y0, r, x, y) {
+        return Math.pow(x0 - x, 2) + Math.pow(y0 - y, 2) <= Math.pow(r, 2);
+      }
+
+      function isInnerPath(x0, y0, x1, y1, x, y, lineWidth) {
+        var a1pow = Math.pow(x0 - x, 2) + Math.pow(y0 - y, 2);
+        var a1 = Math.sqrt(a1pow, 2);
+        var a2pow = Math.pow(x1 - x, 2) + Math.pow(y1 - y, 2);
+        var a2 = Math.sqrt(a2pow, 2);
+
+        var a3pow = Math.pow(x1 - x0, 2) + Math.pow(y1 - y0, 2);
+        var a3 = Math.sqrt(a3pow, 2);
+
+        var r = lineWidth / 2;
+        var ab = (a1pow - a2pow + a3pow) / (2 * a3);
+        var h = Math.sqrt(a1pow - Math.pow(ab, 2), 2);
+
+        var ad = Math.sqrt(Math.pow(a3, 2) + Math.pow(r, 2));
+
+        return h <= r && a1 <= ad && a2 <= ad;
+      }
+
+      function onDown(e) {
+        isDragging = true;
+        let [x, y] = getRelativeOfElPosition(e, canvas);
+        downXY.x = x;
+        downXY.y = y;
+
+        lastTranslateXY.x = translateXY.x;
+        lastTranslateXY.y = translateXY.y;
+
+        x = x - translateXY.x;
+        y = y - translateXY.y;
+
+        activeShape = null;
+
+        data.forEach(item => {
+          switch (item.type) {
+            case 'rect':
+              isInnerRect(...item.data, x, y) && (activeShape = item);
+              break;
+            case 'circle':
+              isInnerCircle(...item.data, x, y) && (activeShape = item);
+              break;
+            case 'line':
+              const lineNumber = item.data.length / 2 - 1;
+              let flag = false;
+              for (let i = 0; i < lineNumber; i++) {
+                let index = i * 2;
+                flag = isInnerPath(
+                  item.data[index],
+                  item.data[index + 1],
+                  item.data[index + 2],
+                  item.data[index + 3],
+                  x,
+                  y,
+                  item.lineWidth || 1
+                );
+                if (flag) {
+                  activeShape = item;
+                  break;
+                }
+              }
+          }
+        });
+
+        if (!activeShape) {
+          canvas.style.cursor = 'grabbing';
+          moveInvoker.value = onMoveCanvasBoard;
+        } else {
+          lastShapeXY.x = 0;
+          lastShapeXY.y = 0;
+          canvas.style.cursor = 'all-scroll';
+          moveInvoker.value = onMoveCanvasShape;
+        }
+
+        upInvoker.value = onUp;
+        leaveInvoker.value = onOut;
+      }
+
+      function onMoveCanvasBoard(e) {
+        if (!isDragging) {
+          return;
+        }
+
+        const maxMoveX = canvas.width / 1;
+        const maxMoveY = canvas.width / 1;
+
+        const [x, y] = getRelativeOfElPosition(e, canvas);
+
+        const moveX = lastTranslateXY.x + x - downXY.x;
+        const moveY = lastTranslateXY.y + y - downXY.y;
+
+        translateXY.x = Math.abs(moveX) > maxMoveX ? translateXY.x : moveX;
+        translateXY.y = Math.abs(moveY) > maxMoveY ? translateXY.y : moveY;
+
+        render();
+      }
+
+      function onMoveCanvasShape(e) {
+        const [x, y] = getRelativeOfElPosition(e, canvas);
+        let moveX = x - (lastShapeXY.x || downXY.x);
+        let moveY = y - (lastShapeXY.y || downXY.y);
+
+        switch (activeShape.type) {
+          case 'rect':
+            let xr = activeShape.data[0];
+            let yr = activeShape.data[1];
+            let width = activeShape.data[2];
+            let height = activeShape.data[3];
+            activeShape.data = [xr + moveX, yr + moveY, width, height];
+            break;
+          case 'circle':
+            let xc = activeShape.data[0];
+            let yc = activeShape.data[1];
+            let r = activeShape.data[2];
+            activeShape.data = [xc + moveX, yc + moveY, r];
+            break;
+          case 'line':
+            const item = activeShape;
+            const lineNumber = item.data.length / 2;
+            for (let i = 0; i < lineNumber; i++) {
+              let index = i * 2;
+              item.data[index] += moveX;
+              item.data[index + 1] += moveY;
+            }
+        }
+
+        lastShapeXY.x = x;
+        lastShapeXY.y = y;
+
+        render();
+      }
+
+      function onUp(e) {
+        isDragging = false;
+        canvas.style.cursor = '';
+        moveInvoker.value = null;
+      }
+
+      function onOut(e) {
+        isDragging = false;
+        moveInvoker.value = null;
+        upInvoker.value = null;
+      }
+
+      function draw(item) {
+        ctx.setTransform(1, 0, 0, 1, translateXY.x, translateXY.y);
+        switch (item.type) {
+          case 'rect':
+            ctx.beginPath();
+            ctx.fillStyle = item.fillStyle;
+            ctx.fillRect(...item.data);
+            break;
+          case 'circle':
+            ctx.beginPath();
+            ctx.fillStyle = item.fillStyle;
+            ctx.arc(...item.data, 0, 2 * Math.PI);
+            ctx.fill();
+            break;
+          case 'line':
+            const arr = item.data.concat();
+
+            ctx.beginPath();
+            ctx.moveTo(arr.shift(), arr.shift());
+            ctx.lineWidth = data.lineWidth || 1;
+            do {
+              ctx.lineTo(arr.shift(), arr.shift());
+            } while (arr.length);
+
+            ctx.stroke();
+        }
+      }
+
+      function render() {
+        // 清除画布内容,重置画布状态, 比 ctx.clearRect 更彻底
+        canvas.width = width;
+        data.forEach(item => {
+          draw(item);
+        });
+      }
+
+      function push(item) {
+        data.push(item);
+        draw(item);
+      }
+
+      function run() {
+        canvas.addEventListener('mousedown', downInvoker);
+        document.addEventListener('mousemove', moveInvoker);
+        document.addEventListener('mouseup', upInvoker);
+        canvas.addEventListener('mouseleave', leaveInvoker);
+
+        canvas.addEventListener('touchstart', downInvoker);
+        document.addEventListener('touchmove', moveInvoker);
+        document.addEventListener('touchend', upInvoker);
+
+        downInvoker.value = onDown;
+
+        push({
+          type: 'circle',
+          fillStyle: 'pink',
+          data: [100, 100, 50]
+        });
+
+        push({
+          type: 'rect',
+          fillStyle: '#0f00ff',
+          data: [200, 200, 100, 100]
+        });
+
+        push({
+          type: 'line',
+          lineWidth: 4,
+          data: [100, 90, 200, 90]
+        });
+      }
+
+      run();
+    </script>
+  </body>
+</html>

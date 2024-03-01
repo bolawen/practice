@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>拖拽模块</title>
+    <style>
+      .container {
+        width: 800px;
+        height: 800px;
+        position: relative;
+        background-color: #f0f0f0;
+      }
+      .draggable {
+        cursor: grab;
+        width: 100px;
+        height: 100px;
+        position: absolute;
+        user-select: none;
+        touch-action: none;
+        background-color: #3498db;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="draggable"></div>
+    </div>
+    <script>
+      const container = document.querySelector('.container');
+      const draggable = document.querySelector('.draggable');
+
+      let isDragging = false;
+
+      const downXY = {
+        x: 0,
+        y: 0
+      };
+
+      function getRelativeOfElPosition(e, el) {
+        const normalizedE = e.type.startsWith('mouse') ? e : e.targetTouches[0];
+        const rect = el.getBoundingClientRect();
+        let x = normalizedE.pageX - rect.left - window.scrollX;
+        let y = normalizedE.pageY - rect.top - window.scrollY;
+        return [x, y];
+      }
+
+      const onDownInvoker = e => {
+        onDownInvoker.value?.(e);
+      };
+
+      const onMoveInvoker = e => {
+        onMoveInvoker.value?.(e);
+      };
+
+      const onUpInvoker = e => {
+        onUpInvoker.value?.(e);
+      };
+
+      const onOutInvoker = e => {
+        onOutInvoker.value?.(e);
+      };
+
+      function onDown(e) {
+        const [x, y] = getRelativeOfElPosition(e, draggable);
+        downXY.x = x;
+        downXY.y = y;
+        draggable.style.cursor = 'grabbing';
+
+        isDragging = true;
+
+        onMoveInvoker.value = onMove;
+        onUpInvoker.value = onUp;
+      }
+
+      function onMove(e) {
+        if (!isDragging) {
+          return;
+        }
+
+        let x = e.clientX - downXY.x;
+        let y = e.clientY - downXY.y;
+
+        const containerRect = container.getBoundingClientRect();
+        const draggableRect = draggable.getBoundingClientRect();
+
+        x = Math.max(Math.min(x, containerRect.width - draggableRect.width), 0);
+        y = Math.max(
+          Math.min(y, containerRect.height - draggableRect.height),
+          0
+        );
+
+        draggable.style.left = x + 'px';
+        draggable.style.top = y + 'px';
+      }
+
+      function onUp() {
+        isDragging = false;
+        draggable.style.cursor = 'grab';
+      }
+
+      function run() {
+        draggable.addEventListener('mousedown', onDownInvoker);
+        document.addEventListener('mousemove', onMoveInvoker);
+        document.addEventListener('mouseup', onUpInvoker);
+        container.addEventListener('mouseleave', onOutInvoker);
+
+        draggable.addEventListener('touchstart', onDownInvoker);
+        document.addEventListener('touchmove', onMoveInvoker);
+        document.addEventListener('touchend', onUpInvoker);
+
+        onDownInvoker.value = onDown;
+      }
+
+      run();
+    </script>
+  </body>
+</html>

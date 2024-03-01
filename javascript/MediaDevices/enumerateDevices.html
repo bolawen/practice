@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>enumerateDevices 获取输入设备</title>
+  </head>
+  <body>
+    <script>
+      async function enumMediaDevices() {
+        try {
+          const devices = await navigator.mediaDevices.enumerateDevices();
+          const inputDevices = devices.filter(item => {
+            return item.kind.endsWith('input') && item.deviceId !== '';
+          });
+          const audioInputs = inputDevices.filter(
+            item => item.kind === 'audioinput'
+          );
+          const videoInputs = inputDevices.filter(
+            item => item.kind === 'videoinput'
+          );
+          console.log('输入设备:', inputDevices);
+          console.log('音频输入设备:', audioInputs);
+          console.log('视频输入设备:', videoInputs);
+        } catch (error) {
+          console.error('enumerateDevices error:', error);
+        }
+      }
+
+      enumMediaDevices();
+    </script>
+  </body>
+</html>

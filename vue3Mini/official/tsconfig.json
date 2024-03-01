@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+    "strict": true,         
+    "baseUrl": "./packages",
+    "target": "es5",
+    "allowJs": false,
+    "outDir": "temp",
+    "sourceMap": false,
+    "module": "esnext",  
+    "skipLibCheck": true,
+    "noImplicitAny":false,
+    "esModuleInterop": true,
+    "noUnusedLocals": false,
+    "removeComments": false,
+    "resolveJsonModule": true,
+    "noUnusedParameters": false,
+    "downlevelIteration": true,
+    "moduleResolution": "node",
+    "lib": ["esnext","dom"],
+    "paths": {
+      "vue": ["./vue"],
+      "@vue/*": ["./*"]
+    },
+    "forceConsistentCasingInFileNames": true,          
+  },
+  "include": [
+    "packages/**/*"
+  ]
+}

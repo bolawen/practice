@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Blob Video</title>
+  </head>
+  <body>
+    <video controls></video>
+    <script>
+      const video = document.querySelector('video');
+      const url = 'http://127.0.0.1:5502/test/html/assets/video1.mp4';
+
+      const getVideoWebmBlobUrl = async url => {
+        const response = await fetch(url);
+        const arrayBuffer = await response.arrayBuffer();
+        const blob = new Blob([arrayBuffer], { type: 'video/webm' });
+        window.URL = window.URL || window.webkitURL;
+        const blobUrl = window.URL.createObjectURL(blob);
+        return blobUrl;
+      };
+
+      const transformOfWebmToMp4Blob = async url => {
+        const response = await fetch(url);
+        const arrayBuffer = await response.arrayBuffer();
+        const blob = new Blob([arrayBuffer], { type: 'video/mp4' });
+        window.URL = window.URL || window.webkitURL;
+        const blobUrl = window.URL.createObjectURL(blob);
+        return blobUrl;
+      };
+
+      const run = async () => {
+        let blobUrl = await getVideoWebmBlobUrl(url);
+        blobUrl = await transformOfWebmToMp4Blob(blobUrl);
+        video.src = blobUrl;
+      };
+
+      run();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AudioContext</title>
+  </head>
+  <body>
+    <button id="button-start-id">Start (8 kHz)</button>
+    <script>
+      class SoundMeter {
+        constructor(audioContext, options) {
+          this.audioContext = audioContext;
+          this.options = { ...options };
+
+          // 创建一个音频分析对象，采样的缓冲区大小为自适应（一般自适应为1K），输入和输出都是单声道
+          this.scriptProcessor = this.audioContext.createScriptProcessor(
+            this.options.bufferSize,
+            this.options.numberOfInputChannels,
+            this.options.numberOfOutputChannels
+          );
+
+          // TODO: 应判断浏览器对Audio Worklet是否支持
+          //   1. 不支持的情况使用ScriptProcessorNode
+          //   2. 支持的情况下使用Audio Worklet
+          this.scriptProcessor.onaudioprocess = this.onAudioProcess;
+        }
+
+        onAudioProcess(evt) {
+          const inputData = evt.inputBuffer.getChannelData(0);
+          const sum = inputData.reduce((acc, curr) => acc + curr * curr, 0);
+          const rms = Math.sqrt(sum / inputData.length);
+          const db = rmsToDb(rms);
+          const volume = this.options.dbToVolumeTransformer(db);
+
+          const audioData = this.options.useBuiltin16BitTransformer
+            ? to16BitPCM(inputData)
+            : inputData;
+
+          if (this.callback && this.audioSourceNode) {
+            this.callback({ rms, db, volume, buffer: audioData });
+          }
+        }
+
+        connectToSource(stream, callback) {
+          this.audioSourceNode =
+            this.audioContext.createMediaStreamSource(stream);
+          this.audioSourceNode.connect(this.scriptProcessor);
+          this.scriptProcessor.connect(this.audioContext.destination);
+          this.callback = callback;
+        }
+
+        stop() {
+          this.audioContext && this.audioContext.suspend();
+          this.scriptProcessor.disconnect();
+
+          if (this.audioSourceNode) {
+            this.audioSourceNode.disconnect();
+            this.audioSourceNode = null;
+            this.callback = null;
+          }
+        }
+      }
+
+      class MediaRecorder {
+        constructor(options) {
+          this.mediaChunks = [];
+          this.mediaStream = null;
+          this.mediaBlobUrl = '';
+          this.emittedChunkSlices = 0;
+        }
+
+        createAudioContext(sampleRate) {
+          this.audioContext = new AudioContext();
+          return this.audioContext;
+        }
+
+        setupSoundMeter() {
+          const audioContext = this.createAudioContext();
+          this.soundMeter = new SoundMeter(audioContext, {
+            useBuiltin16BitTransformer: true
+          });
+
+          this.soundMeter.connectToSource(
+            this.mediaStream,
+            this.onSoundMeterMessage
+          );
+        }
+
+        async requestUserMedia() {
+          if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+            try {
+              let stream;
+
+              if (this.recordScreen) {
+                stream = await navigator.mediaDevices.getDisplayMedia(
+                  this.mediaStreamConstraints
+                );
+              } else {
+                stream = await navigator.mediaDevices.getUserMedia(
+                  this.mediaStreamConstraints
+                );
+              }
+
+              if (this.recordScreen && this.mediaStreamConstraints.audio) {
+                let audioStream =
+                  await navigator.mediaDevices.getUserMedia({
+                    audio: this.mediaStreamConstraints.audio
+                  });
+
+                audioStream
+                  .getAudioTracks()
+                  .forEach(audioTrack => stream.addTrack(audioTrack));
+              }
+
+              this.mediaStream = stream;
+              this.recorderStatus = ERecorderStatus.IDLE;
+            } catch (err) {
+              console.error(err);
+            }
+          }
+        }
+      }
+
+      const run = async sampleRate => {
+        const audioStream = await navigator.mediaDevices.getUserMedia({
+          audio: true,
+          video: false
+        });
+        const audioContext = new AudioContext();
+        const audioStreamSource =
+          audioContext.createMediaStreamSource(audioStream);
+        const delayNode = audioContext.createDelay();
+        delayNode.delayTime.value = 1;
+        audioStreamSource.connect(delayNode).connect(audioContext.destination);
+      };
+
+      setTimeout(() => {
+        document
+          .querySelector('#button-start-id')
+          .addEventListener('click', function () {
+            this.disabled = true;
+            run();
+          });
+      }, 2000);
+    </script>
+  </body>
+</html>

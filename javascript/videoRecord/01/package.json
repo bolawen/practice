@@ -1,0 +1,23 @@
+{
+  "name": "videoRecord",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "rollup -c -w"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^25.0.7",
+    "@rollup/plugin-json": "^6.1.0",
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "rollup": "^4.9.4",
+    "rollup-plugin-string": "^3.0.0"
+  },
+  "dependencies": {
+    "reconnecting-websocket": "^4.4.0"
+  }
+}

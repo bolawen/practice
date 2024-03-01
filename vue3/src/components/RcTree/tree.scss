@@ -1,0 +1,44 @@
+.tree {
+  .tree-node-list {
+  }
+  .tree-node {
+    display: flex;
+    align-items: flex-start;
+    padding: 0 0 4px 0;
+    outline: none;
+
+    .indent {
+      height: 0;
+      display: inline-block;
+      vertical-align: bottom;
+      .indent-unit {
+        width: 16px;
+        display: inline-block;
+      }
+      .indent-unit-start {
+      }
+      .indent-unit-end {
+      }
+    }
+    .switcher {
+      position: relative;
+      flex: none;
+      align-self: stretch;
+      width: 24px;
+      margin: 0;
+      line-height: 24px;
+      text-align: center;
+      cursor: pointer;
+      user-select: none;
+      box-sizing: border-box;
+
+      &.switcher-noop {
+        cursor: auto;
+      }
+      &.switcher-open {
+      }
+      &.switcher-close {
+      }
+    }
+  }
+}

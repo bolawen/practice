@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>getUserMedia 视频录制</title>
+  </head>
+  <body>
+    <div class="operation">
+      <button id="capture">捕获</button>
+    </div>
+    <div class="video-container">
+      <video id="video" autoplay></video>
+    </div>
+    <div class="canvas-container">
+      <canvas id="canvas" width="640" height="480" hidden></canvas>
+    </div>
+    <div class="capture-container">
+      <img id="capture-image" />
+    </div>
+
+    <script>
+      const video = document.getElementById('video');
+      const captureEl = document.getElementById('capture');
+      const captureImageEl = document.getElementById('capture-image');
+      const startRecordEl = document.getElementById('start-record');
+      const stopRecordEl = document.getElementById('stop-record');
+      const canvas = document.getElementById('canvas');
+      const context = canvas.getContext('2d');
+
+      async function prepareRecord() {
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: true,
+          audio: true
+        });
+
+        video.srcObject = stream;
+        video.play();
+      }
+
+      async function checkPermissions(name) {
+        try {
+          return await navigator.permissions.query({ name: name });
+        } catch (error) {
+          return false;
+        }
+      }
+
+      async function run() {
+        const camera = await checkPermissions('camera');
+        const microphone = await checkPermissions('microphone');
+        if (camera.state === 'granted' && microphone.state === 'granted') {
+          prepareRecord();
+        } else {
+          alert('请允许使用摄像头和麦克风');
+        }
+      }
+
+      function getImageDataFromVideoElement({
+        context,
+        videoSize,
+        videoElement,
+        imageDataSize
+      }) {
+        context.clearRect(0, 0, imageDataSize.width, imageDataSize.height);
+        context.save();
+        context.translate(imageDataSize.width, 0);
+        context.scale(-1, 1);
+        context.drawImage(
+          videoElement,
+          0,
+          0,
+          videoSize.width,
+          videoSize.height,
+          0,
+          0,
+          imageDataSize.width,
+          imageDataSize.height
+        );
+        context.restore();
+        const imageData = context.getImageData(
+          0,
+          0,
+          imageDataSize.width,
+          imageDataSize.height
+        );
+        return imageData;
+      }
+
+      captureEl.addEventListener('click', () => {
+        const imageData = getImageDataFromVideoElement({
+          context,
+          videoElement: video,
+          videoSize: { width: 640, height: 480 },
+          imageDataSize: { width: 640, height: 480 },
+        });
+        console.log('imageData', imageData);
+        captureImageEl.src = canvas.toDataURL('image/png');
+      });
+
+      run();
+    </script>
+  </body>
+</html>

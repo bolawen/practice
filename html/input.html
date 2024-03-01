@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <input id="input" />
+
+    <script>
+      let isChinesseInput = false;
+      const input = document.querySelector('#input');
+      const isChrome = navigator.userAgent.indexOf('Chrome') > -1;
+
+      input.addEventListener('change', handleChange);
+      input.addEventListener('compositionend', handleCompositionend);
+      input.addEventListener('compositionstart', handleCompositionstart);
+
+      function handleChange(e) {
+        if (!isChinesseInput) {
+          const { value } = e.target;
+          console.log('value', value);
+        }
+      }
+
+      function handleCompositionend(e) {
+        isChinesseInput = false;
+        if (isChrome) {
+          handleChange(e);
+        }
+      }
+
+      function handleCompositionstart() {
+        isChinesseInput = true;
+      }
+    </script>
+  </body>
+</html>

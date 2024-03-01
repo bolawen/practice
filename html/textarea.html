@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Textarea 高度自适应问题</title>
+</head>
+<body>
+    <textarea style="height: 36px; resize: none; line-height: 20px; box-sizing: border-box;"></textarea>
+    <script>
+        const textarea = document.querySelector('textarea')
+        textarea.oninput = function (e) {
+            const style = getComputedStyle(e.target);
+            let height = parseInt(style.height.slice(0, -2), 10);
+            const lineHeight = parseInt(style.lineHeight.slice(0, -2), 10);
+
+            if (e.target.scrollHeight > height) {
+                e.target.style.height = `${e.target.scrollHeight + 2}px`
+            } else {
+                while (height >= e.target.scrollHeight) {
+                    e.target.style.height = `${height - lineHeight}px`
+                    height -= lineHeight
+                }
+                e.target.style.height = `${height + lineHeight}px`
+            }
+        }
+    </script>
+</body>
+</html>

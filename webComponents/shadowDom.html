@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShadowDom</title>
+</head>
+<body>
+    <div id="app"></div>
+    <script>
+        const app = document.querySelector('#app');
+        const shadowDom = app.attachShadow({ mode: 'open'});
+
+        const div1 = document.createElement('div');
+        div1.classList.add('div1');
+        div1.innerHTML = 'shadowDom 元素内容'
+        const style = document.createElement('style');
+        style.textContent = `
+            .div1{
+                color: red;
+            }
+        `
+        shadowDom.appendChild(div1);
+        shadowDom.appendChild(style);
+    </script>
+</body>
+</html>

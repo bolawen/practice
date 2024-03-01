@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>React Mini KaSong use</title>
+    <script>
+      var process = {
+        env: {
+          NODE_ENV: 'development'
+        }
+      };
+    </script>
+    <script src="../dist/react.iife.js"></script>
+  </head>
+  <body>
+    <div id="root"></div>
+
+    <script>
+      const {
+        ReactDOM: { createRoot },
+        React: { use, Suspense, createElement }
+      } = React;
+
+      const delay = t =>
+        new Promise(r => {
+          setTimeout(r, t);
+        });
+
+      const cachePool = [];
+
+      function fetchData(id, timeout) {
+        const cache = cachePool[id];
+        if (cache) {
+          return cache;
+        }
+
+        return (cachePool[id] = delay(timeout).then(() => {
+          return { data: Math.random().toFixed(2) * 100 };
+        }));
+      }
+
+      function Child() {
+        const value = use(fetchData(0, 3000));
+
+        return createElement('div', {}, value.data);
+      }
+
+      function App() {
+        return createElement(
+          Suspense,
+          { fallback: createElement('div', {}, 'Loading') },
+          createElement(Child)
+        );
+        // return createElement(Child);
+      }
+
+      const root = createRoot(document.getElementById('root'));
+      root.render(createElement(App));
+    </script>
+  </body>
+</html>

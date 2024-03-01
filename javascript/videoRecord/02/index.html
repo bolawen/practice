@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>视频录制</title>
+  </head>
+  <body>
+    <div class="video-container">
+      <video id="video" width="320" height="240" autoplay muted></video>
+    </div>
+    <div class="operation-container">
+      <button id="start">开始录制</button>
+      <button id="stop">停止录制</button>
+      <button id="download">下载</button>
+    </div>
+
+    <script>
+      class Record {
+        constructor(options) {
+          this.recordedBlobs = [];
+          this.mediaRecorder = null;
+          this.countDownSeconds = 5;
+          this.mimeType = 'video/webm';
+          this.countDownTimer = null;
+          this.constraints = { audio: true, video: true };
+          this.videoEl = document.getElementById(options.videoId);
+
+          this.init();
+        }
+
+        async init() {
+          try {
+            const stream = await navigator.mediaDevices.getUserMedia(
+              this.constraints
+            );
+            this.videoEl.srcObject = stream;
+            this.mediaRecorder = new MediaRecorder(stream, {
+              mimeType: this.mimeType
+            });
+
+            this.mediaRecorder.ondataavailable = event => {
+              if (event.data && event.data.size > 0) {
+                this.recordedBlobs.push(event.data);
+                console.log("event.data:", event.data);
+              }
+            };
+          } catch (error) {
+            console.error('init() error:', error);
+          }
+        }
+
+        startCountDown() {
+          this.countDownTimer = setInterval(() => {
+            if (this.countDownSeconds < 1) {
+              clearInterval(this.countDownTimer);
+              console.log('开始录制');
+              this.mediaRecorder.start();
+            } else {
+              console.log('倒计时:', this.countDownSeconds);
+              this.countDownSeconds--;
+            }
+          }, 1000);
+        }
+
+        starRecord() {
+          this.startCountDown();
+        }
+
+        stopRecord() {
+          this.mediaRecorder.stop();
+        }
+
+        resumeRecord() {
+          this.mediaRecorder.resume();
+        }
+
+        pauseRecord() {
+          this.mediaRecorder.pause();
+        }
+
+        downloadRecordResult() {
+          const blob = new Blob(this.recordedBlobs, { type: this.mimeType });
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.style.display = 'none';
+          a.href = url;
+          a.download = 'test.webm';
+          document.body.appendChild(a);
+          a.click();
+          setTimeout(() => {
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+          }, 50);
+        }
+      }
+
+      const record = new Record({
+        videoId: 'video'
+      });
+
+      const startBtn = document.getElementById('start');
+      const stopBtn = document.getElementById('stop');
+      const playBtn = document.getElementById('play');
+      const downloadBtn = document.getElementById('download');
+
+      startBtn.addEventListener('click', () => {
+        record.starRecord();
+      });
+
+      stopBtn.addEventListener('click', () => {
+        record.stopRecord();
+      });
+
+      downloadBtn.addEventListener('click', () => {
+        record.downloadRecordResult();
+      });
+    </script>
+  </body>
+</html>

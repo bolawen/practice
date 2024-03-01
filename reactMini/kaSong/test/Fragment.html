@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>React Mini KaSong</title>
+    <script src="../dist/react.iife.js"></script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script>
+      const {
+        ReactDOM: { createRoot },
+        React: { createElement, useState, Fragment }
+      } = React;
+
+      /**
+       * @description: Fragment 形式一
+       * <ul>
+       *  <Fragment>
+       *    <li></li>
+            <li></li>
+            <li></li>
+       *  </Fragment>
+       *  <li></li>
+       *  <li></li>
+       * </ul>
+       */
+      // function App() {
+      //   const [list, setList] = useState([
+      //     { key: 'A' },
+      //     { key: 'B' },
+      //     { key: 'C' }
+      //   ]);
+
+      //   const handleClick = () => {
+      //     setList([{ key: 'B' }]);
+      //   };
+
+      //   return createElement(
+      //     'ul',
+      //     {
+      //       onClick: handleClick
+      //     },
+      //     createElement(
+      //       Fragment,
+      //       null,
+      //       list.map(item => createElement('li', { key: item.key }, item.key))
+      //     ),
+      //     createElement('li', null, 'D'),
+      //     createElement('li', null, 'E')
+      //   );
+      // }
+
+      /**
+       * @description: Fragment 形式二
+       *  const arr =  [<li key="D">D</li>,<li key="E">E</li>];
+          <ul>
+            <li key="A">A</li>
+            <li key="B">B</li>
+            <li key="C">C</li>
+            { arr } 
+          </ul>
+       */
+      function App() {
+        const [list, setList] = useState([
+          { key: 'A' },
+          { key: 'B' },
+          { key: 'C' }
+        ]);
+
+        const handleClick = () => {
+          setList([{ key: 'B' }]);
+        };
+
+        const arr = list.map(item =>
+          createElement('li', { key: item.key }, item.key)
+        );
+
+        return createElement(
+          'ul',
+          {
+            onClick: handleClick
+          },
+          arr,
+          createElement('li', null, 'D'),
+          createElement('li', null, 'E')
+        );
+      }
+
+      const root = createRoot(document.getElementById('root'));
+      root.render(createElement(App));
+    </script>
+  </body>
+</html>

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      .container {
+        width: 300px;
+        font-size: 24px;
+        position: relative;
+        overflow: hidden;
+        line-height: 36px;
+        display: inline-block;
+      }
+      .container.overflow {
+        overflow: hidden;
+        position: relative;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">看接口付电费发的酸辣房东</div>
+    <script>
+      function getCssStyleValue(value) {
+        if (
+          value.endsWith('px') ||
+          value.endsWith(/(vw|vh)/) ||
+          value.endsWith('em')
+        ) {
+          return Number(value.slice(0, -2));
+        } else if (value.endsWith('%')) {
+          return Number(value.slice(0, -1)) / 100.0;
+        }
+        return value;
+      }
+
+      function getLineHeightRadix(value, fontSize) {
+        if (value === 'normal') {
+          return 1.2;
+        } else if (value.endsWith('%')) {
+          return getCssStyleValue(value);
+        } else if (
+          value.endsWith('px') ||
+          value.endsWith(/(vw|vh)/) ||
+          value.endsWith('em')
+        ) {
+          return (getCssStyleValue(value) / fontSize).toFixed(2);
+        }
+        return value;
+      }
+
+      function adaptiveSize(node) {
+        const minFontSize = 12;
+        const nodeStyle = getComputedStyle(node);
+        let fontSize = getCssStyleValue(nodeStyle.fontSize);
+        const lineHeightRadix = getLineHeightRadix(
+          nodeStyle.lineHeight,
+          fontSize
+        );
+        let lineHeight = lineHeightRadix * fontSize;
+
+        let row = Number((node.clientHeight / lineHeight).toFixed(0));
+
+        if (row >= 2) {
+          node.style.fontSize = minFontSize + 'px';
+          node.style.lineHeight = lineHeightRadix * minFontSize + 'px';
+        }
+
+        lineHeight = getCssStyleValue(nodeStyle.lineHeight);
+        row = Number((node.clientHeight / lineHeight).toFixed(0));
+
+        if (row >= 3) {
+            node.classList.add('overflow');
+            const lineHeight = getCssStyleValue(nodeStyle.lineHeight);
+            node.style['-webkit-line-clamp'] = 3;
+        }
+      }
+
+      const containerDOM = document.querySelector('.container');
+      adaptiveSize(containerDOM);
+    </script>
+  </body>
+</html>

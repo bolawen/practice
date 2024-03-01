@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>React Mini KaSong React.memo</title>
+    <script>
+      var process = {
+        env: {
+          NODE_ENV: 'development'
+        }
+      };
+    </script>
+    <script src="../dist/react.iife.js"></script>
+  </head>
+  <body>
+    <div id="root"></div>
+
+    <script>
+      const {
+        ReactDOM: { createRoot },
+        React: { memo, useState, createElement }
+      } = React;
+
+      function Cpn(props) {
+        console.log('Cpn Render', props);
+
+        return createElement('div', {}, 'Cpn');
+      }
+
+      const MemoCpn = memo(Cpn);
+
+      function App() {
+        const [num, setNum] = useState(0);
+
+        return createElement('div', { onClick: () => setNum(num + 1) }, [
+          createElement(MemoCpn, { num: num }),
+          createElement(MemoCpn, { num: 0 })
+        ]);
+      }
+
+      const root = createRoot(document.getElementById('root'));
+      root.render(createElement(App));
+    </script>
+  </body>
+</html>

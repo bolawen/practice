@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      function setAccurateTimeout(cb, delay = 0, tolerance = 10) {
+        let start = Date.now();
+
+        function loop() {
+          let delta = Date.now() - start;
+          let adjustedDelay = delay - delta;
+
+          if (adjustedDelay <= tolerance) {
+            cb();
+          } else {
+            setTimeout(loop, Math.max(0, adjustedDelay));
+          }
+        }
+        loop();
+      }
+
+      console.time('timer');
+      setAccurateTimeout(() => {
+        console.timeEnd('timer');
+        console.log('准时的 setTimeout');
+      });
+
+      // console.time('timer1');
+      // setTimeout(() => {
+      //   console.timeEnd('timer1');
+      //   console.log('原生的 setTimeout');
+      // });
+    </script>
+  </body>
+</html>

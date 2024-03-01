@@ -1,0 +1,1 @@
+import { baseCompile } from './compile';

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>可缩放的Canvas画布</title>
+    <style>
+      .canvas-container {
+        width: 600px;
+        height: 600px;
+      }
+
+      canvas {
+        user-select: none;
+        touch-action: none;
+        border: 1px solid black;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="canvas-container">
+      <canvas id="canvas"></canvas>
+    </div>
+
+    <script>
+      const canvasWrapper = document.querySelector('.canvas-container');
+      const wrapDomStyle = getComputedStyle(canvasWrapper);
+      const width = parseInt(wrapDomStyle.width, 10);
+      const height = parseInt(wrapDomStyle.height, 10);
+      const canvas = document.getElementById('canvas');
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext('2d');
+
+      const data = [];
+
+      let scale = 1;
+      const maxScale = 5;
+      const minScale = 0.5;
+      const scaleFactor = 0.1;
+
+      let translateXY = {
+        x: 0,
+        y: 0
+      };
+
+      const wheelInvoker = e => {
+        wheelInvoker?.value?.(e);
+      };
+
+      function getRelativeOfElPosition(e, el) {
+        const normalizedE = e.type.startsWith('mouse') ? e : e.targetTouches[0];
+        const rect = el.getBoundingClientRect();
+        let x = normalizedE.pageX - rect.left - window.scrollX;
+        let y = normalizedE.pageY - rect.top - window.scrollY;
+        return [x, y];
+      }
+
+      function onScale(e) {
+        e.preventDefault();
+        if (!e.wheelDelta) {
+          return;
+        }
+
+        let [x, y] = getRelativeOfElPosition(e, canvas);
+        x = x - translateXY.x;
+        y = y - translateXY.y;
+
+        const moveX = (x / scale) * scaleFactor;
+        const moveY = (y / scale) * scaleFactor;
+
+        if (e.wheelDelta > 0) {
+          translateXY.x -= scale >= maxScale ? 0 : moveX;
+          translateXY.y -= scale >= maxScale ? 0 : moveY;
+          scale += scaleFactor;
+        } else {
+          translateXY.x += scale <= minScale ? 0 : moveX;
+          translateXY.y += scale <= minScale ? 0 : moveY;
+          scale -= scaleFactor;
+        }
+
+        scale = Math.min(maxScale, Math.max(scale, minScale));
+        render();
+      }
+
+      function draw(item) {
+        ctx.setTransform(scale, 0, 0, scale, translateXY.x, translateXY.y);
+        switch (item.type) {
+          case 'rect':
+            ctx.beginPath();
+            ctx.fillStyle = item.fillStyle;
+            ctx.fillRect(...item.data);
+            break;
+          case 'circle':
+            ctx.beginPath();
+            ctx.fillStyle = item.fillStyle;
+            ctx.arc(...item.data, 0, 2 * Math.PI);
+            ctx.fill();
+            break;
+          case 'line':
+            const arr = item.data.concat();
+
+            ctx.beginPath();
+            ctx.moveTo(arr.shift(), arr.shift());
+            ctx.lineWidth = data.lineWidth || 1;
+            do {
+              ctx.lineTo(arr.shift(), arr.shift());
+            } while (arr.length);
+
+            ctx.stroke();
+        }
+      }
+
+      function render() {
+        // 清除画布内容,重置画布状态, 比 ctx.clearRect 更彻底
+        canvas.width = width;
+        data.forEach(item => {
+          draw(item);
+        });
+      }
+
+      function push(item) {
+        data.push(item);
+        draw(item);
+      }
+
+      function run() {
+        document.addEventListener('mousewheel', wheelInvoker, {
+          passive: false
+        });
+
+        wheelInvoker.value = onScale;
+
+        push({
+          type: 'circle',
+          fillStyle: 'pink',
+          data: [100, 100, 50]
+        });
+
+        push({
+          type: 'rect',
+          fillStyle: '#0f00ff',
+          data: [200, 200, 100, 100]
+        });
+
+        push({
+          type: 'line',
+          lineWidth: 4,
+          data: [100, 90, 200, 90]
+        });
+      }
+
+      run();
+    </script>
+  </body>
+</html>

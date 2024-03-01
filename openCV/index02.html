@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div class="operation">
+      <button id="start-record">录制</button>
+      <button id="stop-record">停止</button>
+    </div>
+    <div class="video-container">
+      <video id="video" autoplay style="transform: scaleX(-1)"></video>
+    </div>
+    <div class="output-canvas">
+      <h3>OpenCV 截取视频帧</h3>
+      <canvas id="output-canvas"></canvas>
+    </div>
+
+    <script>
+      let cap = null;
+      let src = null;
+      let dst = null;
+
+      const videoWidth = 600;
+      const videoHeight = 600;
+      let mediaRecorder = null;
+      const recordedBlobs = [];
+      const video = document.getElementById('video');
+      const startRecordEl = document.getElementById('start-record');
+      const stopRecordEl = document.getElementById('stop-record');
+      const outputCanvas = document.getElementById('output-canvas');
+      const outputCanvasCtx = outputCanvas.getContext('2d');
+
+      function initDom() {
+        video.width = videoWidth;
+        video.height = videoHeight;
+        outputCanvas.width = videoWidth;
+        outputCanvas.height = videoHeight;
+      }
+
+      function captureFrame() {
+        try {
+          if (video.paused || video.ended) {
+            return;
+          }
+
+          cap.read(src);
+          cv.flip(src, dst, 1);
+          cv.imshow(outputCanvas, dst);
+
+          requestAnimationFrame(captureFrame);
+        } catch (err) {
+          console.log('Error processing video frame:', err);
+        }
+      }
+
+      function startCaptureFrame() {
+        cap = new cv.VideoCapture(video);
+        src = new cv.Mat(video.height, video.width, cv.CV_8UC4);
+        dst = new cv.Mat(video.height, video.width, cv.CV_8UC4);
+
+        requestAnimationFrame(captureFrame);
+      }
+
+      function onOpenCvReady() {
+        cv['onRuntimeInitialized'] = () => {
+          startCaptureFrame();
+        };
+      }
+
+      function startRecord() {
+        const timeSlice = 5000;
+        mediaRecorder.start(timeSlice);
+      }
+
+      async function stopRecord() {
+        const stream = video.srcObject;
+        const tracks = stream.getTracks();
+
+        tracks.forEach(track => {
+          track.stop();
+        });
+
+        video.srcObject = null;
+        mediaRecorder.stop();
+      }
+
+      async function prepareRecord() {
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: true,
+          audio: true
+        });
+
+        video.srcObject = stream;
+        video.play();
+
+        mediaRecorder = new MediaRecorder(stream, {
+          mimeType: 'video/webm'
+        });
+
+        mediaRecorder.ondataavailable = event => {
+          if (event.data && event.data.size > 0) {
+            recordedBlobs.push(event.data);
+          }
+        };
+      }
+
+      async function checkPermissions(name) {
+        try {
+          return await navigator.permissions.query({ name: name });
+        } catch (error) {
+          return false;
+        }
+      }
+
+      async function run() {
+        const camera = await checkPermissions('camera');
+        const microphone = await checkPermissions('microphone');
+        if (camera.state === 'granted' && microphone.state === 'granted') {
+          prepareRecord();
+          startRecordEl.addEventListener('click', startRecord);
+          stopRecordEl.addEventListener('click', stopRecord);
+        } else {
+          alert('请允许使用摄像头和麦克风');
+        }
+      }
+
+      run();
+      initDom();
+    </script>
+
+    <script
+      async
+      src="https://docs.opencv.org/4.5.0/opencv.js"
+      onload="onOpenCvReady();"
+      type="text/javascript"
+    ></script>
+  </body>
+</html>

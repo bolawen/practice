@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CreateApp Template</title>
+    <script src="../packages/vue/dist/vue.iife.js"></script>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script>
+      const { createApp } = Vue;
+
+      const App = {
+        template: `<div> {{ msg }} </div>`,
+        data(){
+          return {
+            msg: '嘻嘻'
+          }
+        },
+        mounted(){
+          setTimeout(()=>{
+            this.msg = '呵呵'
+          },3000);
+        }
+      };
+
+      const app = createApp(App);
+      app.mount('#app');
+    </script>
+  </body>
+</html>

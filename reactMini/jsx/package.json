@@ -1,0 +1,12 @@
+{
+  "name": "jsx",
+  "type": "module",
+  "scripts": {
+    "jsx": "babel App.jsx -o App.js --watch"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.23.0",
+    "@babel/core": "^7.23.3",
+    "@babel/plugin-transform-react-jsx": "^7.22.15"
+  }
+}

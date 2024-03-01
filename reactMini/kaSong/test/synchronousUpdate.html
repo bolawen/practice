@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>React Mini KaSong 并发更新</title>
+    <script>
+      var process = {
+        env: {
+          NODE_ENV: 'development'
+        }
+      };
+    </script>
+    <script src="../dist/react.iife.js"></script>
+  </head>
+  <body>
+    <div id="root"></div>
+
+    <script>
+      const {
+        ReactDOM: { createRoot },
+        React: { createElement, useState, useEffect, Fragment }
+      } = React;
+
+      function Child(props) {
+        const { children } = props;
+
+        const now = performance.now();
+        while (performance.now() - now < 4) {}
+        return createElement('li', {}, children);
+      }
+
+      function App() {
+        const [num, setNum] = useState(100);
+
+        const list = new Array(num)
+          .fill(0)
+          .map((item, index) =>
+            createElement(Child, { key: index, children: index })
+          );
+
+        return createElement('ul', { onClick: () => setNum(50) }, list);
+      }
+
+      const root = createRoot(document.getElementById('root'));
+      root.render(createElement(App));
+    </script>
+  </body>
+</html>

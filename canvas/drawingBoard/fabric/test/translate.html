@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Canvas Drag and Zoom</title>
+  </head>
+  <body>
+    <canvas
+      id="myCanvas"
+      width="600"
+      height="400"
+      style="border: 1px solid #000000"
+    ></canvas>
+    <script>
+      var canvas = document.getElementById('myCanvas');
+      var ctx = canvas.getContext('2d');
+
+      var canvasOffset = { x: 0, y: 0 };
+      var scale = 1;
+      var dragStart, dragged;
+
+      // 绘制一个简单的矩形，用于示例
+      function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.save();
+        ctx.translate(canvasOffset.x, canvasOffset.y);
+        ctx.scale(scale, scale);
+        ctx.fillStyle = 'blue';
+        ctx.fillRect(50, 50, 100, 100); // 绘制个蓝色的矩形
+        ctx.restore();
+      }
+
+      draw();
+
+      function mouseCoords(event) {
+        var rect = canvas.getBoundingClientRect();
+        return {
+          x: (event.clientX - rect.left) / scale - canvasOffset.x,
+          y: (event.clientY - rect.top) / scale - canvasOffset.y
+        };
+      }
+
+      canvas.addEventListener(
+        'mousedown',
+        function (event) {
+          dragStart = mouseCoords(event);
+          dragged = false;
+        },
+        false
+      );
+
+      canvas.addEventListener(
+        'mousemove',
+        function (event) {
+          if (dragStart) {
+            dragged = true;
+            var pt = mouseCoords(event);
+            canvasOffset.x += pt.x - dragStart.x;
+            canvasOffset.y += pt.y - dragStart.y;
+            draw();
+          }
+        },
+        false
+      );
+
+      canvas.addEventListener(
+        'mouseup',
+        function (event) {
+          dragStart = null;
+          if (!dragged) {
+            // Click event code here if needed
+          }
+        },
+        false
+      );
+
+      canvas.addEventListener(
+        'wheel',
+        function (event) {
+          var wheel = event.deltaY < 0 ? 1 : -1;
+          var zoom = Math.exp(wheel * 0.05);
+          var oldScale = scale;
+          scale *= zoom;
+          var pt = mouseCoords(event);
+          canvasOffset.x -= pt.x * (zoom - 1);
+          canvasOffset.y -= pt.y * (zoom - 1);
+          draw();
+          event.preventDefault();
+        },
+        false
+      );
+    </script>
+  </body>
+</html>

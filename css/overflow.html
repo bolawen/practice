@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>溢出省略</title>
+    <style>
+      .text-container {
+        width: 500px;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        flex-wrap: nowrap;
+      }
+      .first {
+        flex: none;
+        margin-right: 24px;
+      }
+      .second {
+        width: 100%;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        margin-right: 24px;
+      }
+      .third {
+        flex: none;
+        margin-right: 24px;
+      }
+      .forth {
+        flex: none;
+        margin-right: 24px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="text-container">
+      <span class="first">第一部分</span>
+      <span class="second"
+        >第二部分 超长超长超长超长超长超长超长超长超长超长</span
+      >
+      <span class="third">第三部分</span>
+      <span class="forth">第四部分</span>
+    </div>
+  </body>
+</html>

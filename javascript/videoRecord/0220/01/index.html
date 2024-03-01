@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>getUserMedia 视频录制</title>
+  </head>
+  <body>
+    <div class="operation">
+      <button id="start-record">录制</button>
+      <button id="stop-record">停止</button>
+    </div>
+    <div class="video-container">
+      <video id="video" autoplay></video>
+    </div>
+    <div class="canva-container">
+      <canvas
+        id="canvasElement"
+        width="640"
+        height="480"
+        style="display: none"
+      ></canvas>
+    </div>
+    <script>
+      let mediaRecorder = null;
+      const recordedBlobs = [];
+      const video = document.getElementById('video');
+      const startRecordEl = document.getElementById('start-record');
+      const stopRecordEl = document.getElementById('stop-record');
+      const canvas = document.getElementById('canvasElement');
+      const context = canvas.getContext('2d');
+
+      function getImageDataFromVideoElement({
+        context,
+        imageDataSize,
+        videoElement,
+        videoSize
+      }) {
+        context.clearRect(0, 0, imageDataSize.width, imageDataSize.height);
+        context.save();
+        context.translate(imageDataSize.width, 0);
+        context.scale(-1, 1);
+        context.drawImage(
+          videoElement,
+          0,
+          0,
+          videoSize.width,
+          videoSize.height,
+          0,
+          0,
+          imageDataSize.width,
+          imageDataSize.height
+        );
+        context.restore();
+        const imageData = context.getImageData(0, 0, imageDataSize.width,  imageDataSize.height);
+        return imageData;
+      }
+
+      function captureFrame(){
+        const imageData = getImageDataFromVideoElement({
+          context,
+          imageDataSize: { width: 640, height: 480 },
+          videoElement: video,
+          videoSize: { width: 640, height: 480 }
+        });
+        console.log("imageData",imageData)
+        requestAnimationFrame(captureFrame);
+      }
+
+      function startRecord() {
+        const timeSlice = 5000;
+        mediaRecorder.start(timeSlice);
+        captureFrame();
+      }
+
+      async function stopRecord() {
+        const stream = video.srcObject;
+        const tracks = stream.getTracks();
+
+        tracks.forEach(track => {
+          track.stop();
+        });
+
+        video.srcObject = null;
+        mediaRecorder.stop();
+      }
+
+      async function prepareRecord() {
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: true,
+          audio: true
+        });
+
+        video.srcObject = stream;
+        video.play();
+
+        mediaRecorder = new MediaRecorder(stream, {
+          mimeType: 'video/webm'
+        });
+
+        mediaRecorder.ondataavailable = event => {
+          if (event.data && event.data.size > 0) {
+            recordedBlobs.push(event.data);
+          }
+        };
+      }
+
+      async function checkPermissions(name) {
+        try {
+          return await navigator.permissions.query({ name: name });
+        } catch (error) {
+          return false;
+        }
+      }
+
+      async function run() {
+        const camera = await checkPermissions('camera');
+        const microphone = await checkPermissions('microphone');
+        if (camera.state === 'granted' && microphone.state === 'granted') {
+          prepareRecord();
+          startRecordEl.addEventListener('click', startRecord);
+          stopRecordEl.addEventListener('click', stopRecord);
+        } else {
+          alert('请允许使用摄像头和麦克风');
+        }
+      }
+
+      run();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>特定设备录制视频</title>
+  </head>
+  <body>
+    <div class="operation">
+      <button id="start-record">录制</button>
+      <button id="stop-record">停止</button>
+      <button id="switch-video-device">切换摄像头设备</button>
+    </div>
+    <div class="video-container">
+      <video id="video" autoplay></video>
+    </div>
+    <script>
+      let mediaRecorder = null;
+      const recordedBlobs = [];
+      const inputDevicesMap = {
+        audio: [],
+        video: []
+      };
+      const video = document.getElementById('video');
+      const startRecordEl = document.getElementById('start-record');
+      const stopRecordEl = document.getElementById('stop-record');
+      const switchVideoDeviceEl = document.getElementById('switch-video-device');
+
+      async function enumMediaDevices() {
+        try {
+          const devices = await navigator.mediaDevices.enumerateDevices();
+          const inputDevices = devices.filter(item => {
+            return item.kind.endsWith('input') && item.deviceId !== '';
+          });
+          const audioInputs = inputDevices.filter(
+            item => item.kind === 'audioinput'
+          );
+          const videoInputs = inputDevices.filter(
+            item => item.kind === 'videoinput'
+          );
+
+          inputDevicesMap.audio = audioInputs;
+          inputDevicesMap.video = videoInputs;
+        } catch (error) {
+          console.error('enumerateDevices error:', error);
+        }
+      }
+
+      async function getStream(params) {
+        params = params || {};
+        const constraints = {
+          audio: { deviceId: params.audioDeviceId || 'default' },
+          video: { deviceId: params.videoDeviceId || 'default' }
+        };
+
+        try{
+          return await navigator.mediaDevices.getUserMedia(constraints);
+        }catch(error){
+          /**
+           * @description: 处理错误
+           * 1. 无法获取到设备时，会抛出错误
+           * 2. windows 系统下， 摄像头设备被占用时，会抛出错误。
+           * 
+           * 如果 getUserMedia() 成功，我们知道用户的摄像头是空闲的，所以可以进行正常操作。如果产生了一个错误，就可能是摄像头被占用，或者用户没有授权网页访问摄像头，或者摄像头根本就不存在。
+           * 
+           * 需要注意的是，即使能够成功地获取音视频流，这也不意味着可以清除之前的占用。如果摄像头被另一个浏览器标签页或其他应用程序占用，你的脚本不能直接中止那些会话；这是由操作系统和浏览器的隐私安全机制所控制的。
+           */          
+          return null;
+        } 
+      }
+
+      function startRecord() {
+        const timeSlice = 5000;
+        mediaRecorder.start(timeSlice);
+      }
+
+      async function stopRecord() {
+        const stream = video.srcObject;
+        const tracks = stream.getTracks();
+
+        tracks.forEach(track => {
+          track.stop();
+        });
+
+        video.srcObject = null;
+        mediaRecorder.stop();
+      }
+
+      async function prepareRecord(params) {
+        const stream = await getStream(params);
+
+        if(!stream){
+          return;
+        }
+
+        video.srcObject = stream;
+        video.play();
+
+        mediaRecorder = new MediaRecorder(stream, {
+          mimeType: 'video/webm'
+        });
+
+        recordedBlobs.length = 0;
+
+        mediaRecorder.ondataavailable = event => {
+          if (event.data && event.data.size > 0) {
+            recordedBlobs.push(event.data);
+            console.log("recordedBlobs",recordedBlobs)
+          }
+        };
+      }
+
+      prepareRecord();
+      enumMediaDevices();
+
+      startRecordEl.addEventListener('click', startRecord);
+      stopRecordEl.addEventListener('click', stopRecord);
+      switchVideoDeviceEl.addEventListener('click', async () => {
+        const videoDeviceId = inputDevicesMap.video[0].deviceId;
+        prepareRecord({ videoDeviceId });
+      });
+    </script>
+  </body>
+</html>

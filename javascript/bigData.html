@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <ul id="container"></ul>
+    <script>
+      const ul = document.getElementById('container');
+      const total = 1000;
+      const now = Date.now();
+      for (let i = 0; i < total; i++) {
+        let li = document.createElement('li');
+        li.innerHTML = `<div> <div>${i}</div> <div>${i} 嘻嘻哈哈嘻嘻嘻嘻哈哈嘻嘻</div><div>${i} 嘻嘻哈哈嘻嘻嘻嘻哈哈</div> <div>${i}</div> <div>${i}</div> <div>${i}</div> <div>${i}</div> <div>${i}</div> <div>${i}</div> <div>${i}</div> <div>${i}</div> <div>${i}</div> <div>${i}</div> <div>${i}</div> <div>${i}</div> <div>${i}</div></div>`;
+        ul.append(li);
+      }
+      console.log('JS 运行时间为:', Date.now() - now); // JS 运行时间为: 395
+      setTimeout(() => {
+        console.log('JS 执行+页面渲染的时间为:', Date.now() - now); // JS 执行+页面渲染的时间为: 6648
+      }, 0);
+    </script>
+  </body>
+</html>

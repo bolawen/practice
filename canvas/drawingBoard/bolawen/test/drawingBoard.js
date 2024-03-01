@@ -1,0 +1,179 @@
+// 创建画布
+const canvas = document.createElement('canvas');
+const context = canvas.getContext('2d');
+document.body.appendChild(canvas);
+
+// 设置画布大小
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+// 设置默认画笔属性
+let currentTool = 'pen';
+let currentColor = '#000000';
+let currentSize = 5;
+let isDrawing = false;
+let lastX = 0;
+let lastY = 0;
+let undoStack = [];
+let redoStack = [];
+
+// 监听鼠标按下事件
+canvas.addEventListener('mousedown', startDrawing);
+
+// 监听鼠标移动事件
+canvas.addEventListener('mousemove', draw);
+
+// 监听鼠标松开事件
+canvas.addEventListener('mouseup', stopDrawing);
+
+// 监听鼠标离开画布事件
+canvas.addEventListener('mouseout', stopDrawing);
+
+// 监听触摸开始事件
+canvas.addEventListener('touchstart', startDrawing);
+
+// 监听触摸移动事件
+canvas.addEventListener('touchmove', draw);
+
+// 监听触摸结束事件
+canvas.addEventListener('touchend', stopDrawing);
+
+// 监听触摸取消事件
+canvas.addEventListener('touchcancel', stopDrawing);
+
+// 监听键盘按下事件
+document.addEventListener('keydown', handleKeyDown);
+
+// 绘制函数
+function draw(e) {
+    if (!isDrawing) return;
+    const { offsetX, offsetY } = getOffset(e);
+    
+    context.strokeStyle = currentColor;
+    context.lineWidth = currentSize;
+    context.lineJoin = 'round';
+    context.lineCap = 'round';
+
+    if (currentTool === 'pen') {
+        context.beginPath();
+        context.moveTo(lastX, lastY);
+        context.lineTo(offsetX, offsetY);
+        context.stroke();
+        [lastX, lastY] = [offsetX, offsetY];
+    } else if (currentTool === 'circle') {
+        const radius = Math.sqrt(Math.pow(offsetX - lastX, 2) + Math.pow(offsetY - lastY, 2));
+        context.beginPath();
+        context.arc(lastX, lastY, radius, 0, 2 * Math.PI);
+        context.stroke();
+    } else if (currentTool === 'rectangle') {
+        const width = offsetX - lastX;
+        const height = offsetY - lastY;
+        context.strokeRect(lastX, lastY, width, height);
+    } else if (currentTool === 'ellipse') {
+        const radiusX = Math.abs(offsetX - lastX) / 2;
+        const radiusY = Math.abs(offsetY - lastY) / 2;
+        const centerX = lastX + radiusX;
+        const centerY = lastY + radiusY;
+        context.beginPath();
+        context.ellipse(centerX, centerY, radiusX, radiusY, 0, 0, 2 * Math.PI);
+        context.stroke();
+    } else if (currentTool === 'line') {
+        context.beginPath();
+        context.moveTo(lastX, lastY);
+        context.lineTo(offsetX, offsetY);
+        context.stroke();
+    }
+}
+
+// 开始绘制函数
+function startDrawing(e) {
+    isDrawing = true;
+    [lastX, lastY] = getOffset(e);
+}
+
+// 停止绘制函数
+function stopDrawing() {
+    isDrawing = false;
+    saveState();
+}
+
+// 获取鼠标或触摸位置的偏移量
+function getOffset(e) {
+    let offsetX, offsetY;
+    if (e.type.startsWith('mouse')) {
+        offsetX = e.offsetX;
+        offsetY = e.offsetY;
+    } else if (e.type.startsWith('touch')) {
+        const touch = e.touches[0];
+        const rect = canvas.getBoundingClientRect();
+        offsetX = touch.clientX - rect.left;
+        offsetY = touch.clientY - rect.top;
+    }
+    return [offsetX, offsetY];
+}
+
+// 撤销函数
+function undo() {
+    if (undoStack.length > 0) {
+        const state = undoStack.pop();
+        redoStack.push(canvas.toDataURL());
+        const img = new Image();
+        img.src = state;
+        img.onload = function() {
+            context.clearRect(0, 0, canvas.width, canvas.height);
+            context.drawImage(img, 0, 0);
+        };
+    }
+}
+
+// 重做函数
+function redo() {
+    if (redoStack.length > 0) {
+        const state = redoStack.pop();
+        undoStack.push(canvas.toDataURL());
+        const img = new Image();
+        img.src = state;
+        img.onload = function() {
+            context.clearRect(0, 0, canvas.width, canvas.height);
+            context.drawImage(img, 0, 0);
+        };
+    }
+}
+
+// 清除画布函数
+function clearCanvas() {
+    context.clearRect(0, 0, canvas.width, canvas.height);
+    undoStack = [];
+    redoStack = [];
+}
+
+// 橡皮擦函数
+function erase() {
+    currentColor = '#ffffff';
+}
+
+// 保存画布为图片函数
+function saveCanvas() {
+    const link = document.createElement('a');
+    link.href = canvas.toDataURL();
+    link.download = 'canvas.png';
+    link.click();
+}
+
+// 处理键盘按下事件
+function handleKeyDown(e) {
+    if (e.key === 'z' && (e.ctrlKey || e.metaKey)) {
+        undo();
+    } else if (e.key === 'y' && (e.ctrlKey || e.metaKey)) {
+        redo();
+    }
+}
+
+// 设置画笔大小和颜色
+function setPenSize(size) {
+    currentSize = size;
+}
+
+function setPenColor(color) {
+    currentColor = color;
+}

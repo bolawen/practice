@@ -1,0 +1,35 @@
+.bolawen-input {
+    position: relative;
+  
+    .bolawen-input__input {
+      box-sizing: border-box;
+      width: 100%;
+      padding-right: 8px;
+      padding-left: 8px;
+      line-height: 30px;
+      background-color: #fff;
+      border: 1px solid #e0e0e0;
+      border-radius: 4px;
+    }
+  
+    .bolawen-input__message {
+        gap: 12px;
+        display: flex;
+        margin-top: 8px;
+        align-items: center;
+        justify-content: space-between;
+  
+      .bolawen-input__message__error {
+        flex: 1;
+        width: 100%;
+        line-height: 20px;
+        color: #dd4e40;
+      }
+  
+      .bolawen-input__message__limit {
+        flex: 0;
+        white-space: nowrap;
+      }
+    }
+  }
+  

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>React Mini KaSong useMemo</title>
+    <script>
+      var process = {
+        env: {
+          NODE_ENV: 'development'
+        }
+      };
+    </script>
+    <script src="../dist/react.iife.js"></script>
+  </head>
+  <body>
+    <div id="root"></div>
+
+    <script>
+      const {
+        ReactDOM: { createRoot },
+        React: { memo, useState, useMemo, createElement }
+      } = React;
+
+      function Cpn(props) {
+        const { uuid } = props;
+        console.log('Cpn Render', props);
+
+        return createElement('div', {}, 'Cpn');
+      }
+
+      const MemoCpn = memo(Cpn);
+
+      function getUniqueIdByNanoID(size = 10) {
+        let id = '';
+        let i = size;
+        const urlAlphabet =
+          'useandom-26T198340PX75pxJACKVERYMINDBUSHWOLF_GQZbfghjklqvwyzrict';
+        while (i--) {
+          id += urlAlphabet[(Math.random() * 64) | 0];
+        }
+        return id;
+      }
+
+      function getUniqueId(size) {
+        return getUniqueIdByNanoID(size);
+      }
+
+      function App() {
+        const [num, setNum] = useState(0);
+
+        console.log('App Render');
+
+        const uuid = getUniqueId();
+        // const uuid = useMemo(() => getUniqueId(), []);
+
+        return createElement('div', { onClick: () => setNum(num + 1) }, [
+          createElement(MemoCpn, { uuid })
+        ]);
+      }
+
+      const root = createRoot(document.getElementById('root'));
+      root.render(createElement(App));
+    </script>
+  </body>
+</html>

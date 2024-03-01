@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Synchronous Update Demo</title>
+    <style>
+      #span-container {
+        display: flex;
+        flex-wrap: wrap;
+      }
+
+      .span-1 {
+        color: green;
+      }
+      .span-2 {
+        color: purple;
+      }
+      .span-3 {
+        color: saddlebrown;
+      }
+      .span-4 {
+        color: orchid;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="button-container"></div>
+    <div id="span-container"></div>
+    <script type="module">
+      import scheduler from 'https://cdn.jsdelivr.net/npm/scheduler@0.23.0/+esm';
+
+      const {
+        unstable_LowPriority: LowPriority,
+        unstable_shouldYield: shouldYield,
+        unstable_IdlePriority: IdlePriority,
+        unstable_NormalPriority: NormalPriority,
+        unstable_cancelCallback: cancelCallback,
+        unstable_scheduleCallback: scheduleCallback,
+        unstable_ImmediatePriority: ImmediatePriority,
+        unstable_getFirstCallbackNode: getFirstCallbackNode,
+        unstable_UserBlockingPriority: UserBlockingPriority
+      } = scheduler;
+
+      const workList = [];
+      let currentCallback = null;
+      let prevPriority = IdlePriority;
+      const spanContainer = document.querySelector('#span-container');
+      const buttonContainer = document.querySelector('#button-container');
+
+      /**
+       * @description: 模拟一些耗时的任务（与逻辑无关，只是为了看效果而已）
+       * @param {*} len
+       */
+      function doSomeBusyWork(len) {
+        let result = 0;
+        while (len--) {
+          result += len;
+        }
+      }
+
+      function insertSpan(content) {
+        const span = document.createElement('span');
+
+        span.textContent = content;
+        span.className = `span-${content}`;
+
+        doSomeBusyWork(10000000);
+        spanContainer.appendChild(span);
+      }
+
+      function schedule() {
+        const callbackNode = getFirstCallbackNode();
+        const currentWork = workList.sort(
+          (work1, work2) => work1.priority - work2.priority
+        )[0];
+
+        if (!currentWork) {
+          currentCallback = null;
+          callbackNode && cancelCallback(callbackNode);
+          return;
+        }
+
+        const { priority: currentPriority } = currentWork;
+
+        if (prevPriority === currentPriority) {
+          return;
+        }
+
+        callbackNode && cancelCallback(callbackNode);
+
+        currentCallback = scheduleCallback(
+          currentPriority,
+          perform.bind(null, currentWork)
+        );
+      }
+
+      function perform(work, didTimeout) {
+        const needSync = work.priority === ImmediatePriority || didTimeout;
+
+        while ((needSync || !shouldYield()) && work.count) {
+          work.count--;
+          insertSpan(work.priority + '');
+        }
+
+        prevPriority = work.priority;
+
+        if (!work.count) {
+          const workIndex = workList.indexOf(work);
+          workList.splice(workIndex, 1);
+          prevPriority = IdlePriority;
+        }
+
+        const prevCallback = currentCallback;
+        schedule();
+        const newCallback = currentCallback;
+
+        if (newCallback && prevCallback === newCallback) {
+          return perform.bind(null, work);
+        }
+      }
+
+      const buttonList = [
+        LowPriority,
+        NormalPriority,
+        ImmediatePriority,
+        UserBlockingPriority
+      ];
+      const buttonTestList = [
+        'LowPriority',
+        'NormalPriority',
+        'ImmediatePriority',
+        'UserBlockingPriority'
+      ];
+
+      buttonList.forEach((priority, index) => {
+        const button = document.createElement('button');
+        button.textContent = buttonTestList[index];
+        button.addEventListener('click', () => {
+          workList.unshift({
+            priority,
+            count: 100
+          });
+          schedule();
+        });
+        buttonContainer.appendChild(button);
+      });
+    </script>
+  </body>
+</html>

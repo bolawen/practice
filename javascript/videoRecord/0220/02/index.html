@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div class="operation">
+      <button id="start-record">录制</button>
+      <button id="stop-record">停止</button>
+    </div>
+    <div class="video-container" style="position: relative">
+      <video
+        id="video"
+        autoplay
+        style="width: 640px; height: 480px; transform: scaleX(-1)"
+      ></video>
+      <div class="canva-container" style="position: absolute; top: 0">
+        <canvas
+          id="capture-canvas"
+          width="640"
+          height="480"
+          style="display: none"
+        ></canvas>
+        <canvas id="face-canvas" width="640" height="480"></canvas>
+      </div>
+    </div>
+
+    <script type="module" src="./record.js"></script>
+  </body>
+</html>

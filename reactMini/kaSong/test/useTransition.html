@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>React Mini KaSong useTransition</title>
+    <script>
+      var process = {
+        env: {
+          NODE_ENV: 'development'
+        }
+      };
+    </script>
+    <script src="../dist/react.iife.js"></script>
+  </head>
+  <body>
+    <div id="root"></div>
+
+    <script>
+      const {
+        ReactDOM: { createRoot },
+        React: { createElement, useState, useEffect, useTransition }
+      } = React;
+
+      function App() {
+        const [isPending, startTransition] = useTransition();
+        const [message, setMessage] = useState('Hello World');
+
+        useEffect(() => {
+          setTimeout(() => {
+            startTransition(() => {
+              setMessage('Hello Bolawen');
+            });
+          }, 3000);
+        }, []);
+
+        return createElement('div', {}, message);
+      }
+
+      const root = createRoot(document.getElementById('root'));
+      root.render(createElement(App));
+    </script>
+  </body>
+</html>

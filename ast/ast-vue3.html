@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vue3.0 AST</title>
+  </head>
+  <body>
+    <!-- <script>
+      const template1 = `<div> Hello World </div>`;
+      const template2 = `<div id='div-id'> Hello World </div>`;
+      const template3 = `<div class='div-class'> Hello World </div>`;
+      const template4 = `<div
+            id='div-id'
+            class='div-class'
+        > Hello World </div>`;
+
+      const match1 = /^<\/?([a-z][^\t\r\f\n\s/>]*)/i.exec(template1);
+      console.log(match1[0],match1[1]); // <div div
+      const match2 = /^<\/?([a-z][^\t\r\f\n\s/>]*)/i.exec(template2);
+      console.log(match2[0],match2[1]); // <div div
+      const match3 = /^<\/?([a-z][^\t\r\f\n\s/>]*)/i.exec(template3);
+      console.log(match3[0],match3[1]); // <div div
+      const match4 = /^<\/?([a-z][^\t\r\f\n\s/>]*)/i.exec(template4);
+      console.log(match4[0],match4[1]); // <div div
+
+
+      const restTemplate1 = template1.slice(match1[0].length)
+      console.log(restTemplate1); // > Hello World </div>
+
+      const isSelfClosing =  restTemplate1.startsWith('/>')
+      const restTEmplate2 = restTemplate1.slice(isSelfClosing? 2:1) 
+      console.log(restTEmplate2) // Hello World </div>
+    </script> -->
+    <!-- <script>
+      const template1 = `<div> Hello World </div>`;
+
+      const match1 = /^<\/?([a-z][^\t\r\f\n\s/>]*)/i.exec(template1);
+      console.log(match1[0],match1[1]); // <div div
+
+      const restTemplate1 = template1.slice(match1[0].length)
+      console.log(restTemplate1); // > Hello World </div>
+
+      const isSelfClosing =  restTemplate1.startsWith('/>')
+      const restTemplate2 = restTemplate1.slice(isSelfClosing? 2:1) 
+      console.log(restTemplate2) // Hello World </div>
+
+      const endTokens = ["<","{{"];
+      let endIndex = restTemplate2.length;
+      for(let i=0; i< endTokens.length;i++){
+          const index = restTemplate2.indexOf(endTokens[i],1);
+          if(index != -1 && endIndex > index){
+              endIndex = index;
+          }
+      }   
+      console.log(endIndex,restTemplate2[endIndex])
+      const text = restTemplate2.slice(0,endIndex)
+      console.log('text',text) // text  Hello World 
+    </script> -->
+    <!-- <script>
+      function advanceBy(context, numberOfString) {
+        const { source } = context;
+        context.source = source.slice(numberOfString);
+      }
+
+      function advanceSpaces(context) {
+        const spaceReg = /^[\r\t\n\f\s]+/;
+        const match = spaceReg.exec(context.source);
+        if (match) {
+          advanceBy(context, match[0].length);
+        }
+      }
+
+      function parseTextData(context, length) {
+        const rawText = context.source.slice(0, length);
+        advanceBy(context, length);
+        return rawText;
+      }
+
+      function parseAttributeValue(context) {
+        let value = '';
+        const quote = context.source[0];
+        const isQuote = quote === '"' || quote === `'`;
+        if (isQuote) {
+          advanceBy(context, 1);
+          const endIndex = context.source.indexOf(quote);
+          if (endIndex === -1) {
+            value = parseTextData(context, context.source.length);
+          } else {
+            value = parseTextData(context, endIndex);
+            advanceBy(context,1);
+          }
+        }
+        return value;
+      }
+
+      function parseAttribute(context) {
+        const attrReg = /^[^\r\t\n\f\s/>][^\r\t\n\f\s/>=]*/;
+        const match = attrReg.exec(context.source);
+        const name = match[0];
+        advanceBy(context, name.length);
+
+        let value;
+        advanceSpaces(context);
+        advanceBy(context, 1);
+        advanceSpaces(context);
+        value = parseAttributeValue(context);
+
+        return {
+          name,
+          value
+        };
+      }
+
+      function parseAttributes(context) {
+        const props = [];
+        while (context.source.length > 0) {
+          const attr = parseAttribute(context);
+          props.push(attr);
+          advanceSpaces(context);
+        }
+        return props;
+      }
+
+      const context = {
+        source: 'key1 = "value1" key2="value2"   key3="value3"'
+      };
+
+      const props = parseAttributes(context);
+      console.log("props",props);
+      
+    </script> -->
+
+    <!-- <script>
+      function advanceBy(context, numberOfString) {
+        const { source } = context;
+        context.source = source.slice(numberOfString);
+      }
+
+      function startsWith(source, searchString) {
+        return source.startsWith(searchString);
+      }
+
+      function parseTextData(context, length) {
+        const rawText = context.source.slice(0, length);
+        advanceBy(context, length);
+        return rawText;
+      }
+
+      function parseText(context) {
+        const endTokens = ['<'];
+        let endIndex = context.source.length;
+        for (let i = 0; i < endTokens.length; i++) {
+          const index = context.source.indexOf(endTokens[i], 1);
+          if (index !== -1 && endIndex > index) {
+            endIndex = index;
+          }
+        }
+
+        const content = parseTextData(context, endIndex);
+        return content;
+      }
+
+      const context = {
+        source: 'fdsfdsfdslkj<'
+      };
+
+      const tag = parseText(context);
+      console.log(tag);
+      console.log(context);
+    </script> -->
+
+    <script type="module" src="./ast-parse-01.js"></script>
+  </body>
+</html>

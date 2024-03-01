@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>getDisplayMedia 屏幕录制共享</title>
+    <style>
+      video {
+        width: 500px;
+        height: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>getDisplayMedia 屏幕录制共享</h1>
+
+    <div class="operation">
+      <button id="start-capture">录制</button>
+      <button id="stop-capture">停止</button>
+    </div>
+    <div class="video-container">
+      <video autoplay></video>
+    </div>
+
+    <script>
+      let mediaRecorder = null;
+      const recordedBlobs = [];
+      const video = document.querySelector('video');
+      const stopButton = document.getElementById('stop-capture');
+      const startButton = document.getElementById('start-capture');
+
+      const startCapture = async () => {
+        const timeSlice = 5000;
+        mediaRecorder.start(timeSlice);
+      };
+
+      const stopCapture = async () => {
+        const stream = video.srcObject;
+        const tracks = stream.getTracks();
+
+        tracks.forEach(track => {
+          track.stop();
+        });
+
+        video.srcObject = null;
+        mediaRecorder.stop();
+      };
+
+      const prepareCapture = async () => {
+        const displayMediaOptions = {
+          video: {
+            displaySurface: 'window'
+          },
+          audio: {
+            echoCancellation: true,
+            noiseSuppression: true,
+            sampleRate: 44100,
+            suppressLocalAudioPlayback: true
+          },
+          surfaceSwitching: 'include',
+          selfBrowserSurface: 'exclude',
+          systemAudio: 'exclude'
+        };
+
+        try {
+          const stream = await navigator.mediaDevices.getDisplayMedia(
+            displayMediaOptions
+          );
+          video.srcObject = stream;
+          video.play();
+
+          mediaRecorder = new MediaRecorder(stream, {
+            mimeType: 'video/webm'
+          });
+
+          mediaRecorder.ondataavailable = event => {
+            if (event.data && event.data.size > 0) {
+              recordedBlobs.push(event.data);
+              console.log("recordedBlobs",recordedBlobs)
+            }
+          };
+        } catch (error) {
+          console.log('startCapture Error: ', error);
+        }
+      };
+
+      prepareCapture();
+      startButton.addEventListener('click', startCapture);
+      stopButton.addEventListener('click', stopCapture);
+    </script>
+  </body>
+</html>

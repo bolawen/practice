@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>可编辑 DIV</title>
+    <script src="https://cdn.jsdelivr.net/npm/mark.js@8.11.1/dist/mark.min.js"></script>
+    <style>
+      /* 输入框 */
+      .div-rich-editor {
+        width: 400px;
+        height: 400px;
+        border-radius: 4px;
+        background-color: #f5f5f5;
+      }
+      /* 输入框为空时显示 placeholder */
+      .div-rich-editor:empty:before {
+        content: attr(placeholder);
+        color: red;
+      }
+      /* 输入框获取焦点时移除 placeholder */
+      .div-rich-editor:focus:before {
+        content: none;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- <div
+      class="div-rich-editor"
+      contenteditable="true"
+      placeholder="请输入内容"
+      onblur="onDivBlur(event)"
+      oninput="onDivInput(event)"
+      onpaste="onDivPaste(event)"
+      onkeydown="onDivKeyDown(event)"
+      onkeypress="onDivKeyPress(event)"
+      style="resize: both; overflow: auto"
+    ></div> -->
+
+    <textarea class="textarea"></textarea>
+
+    <button onclick="onHeightLight()">高亮</button>
+    <script>
+      function onDivInput(event) {
+        const value = event.target.innerText;
+        console.log('onDivInput', value);
+      }
+      function onDivBlur(event) {
+        const value = event.target.innerText;
+        console.log('onDivBlur', value);
+      }
+      function onDivPaste(event) {
+        const value = event.originalEvent.clipboardData.getData('text');
+        console.log('onDivPaste', value);
+      }
+      function onDivKeyDown(event) {
+        const value = event.target.innerText;
+        console.log('onDivKeyDown', value);
+      }
+      function onDivKeyPress(event) {
+        const value = event.target.innerText;
+        console.log('onDivKeyDown', value);
+      }
+      function onHeightLight() {
+        const content = document.querySelector('.textarea');
+        const instance = new Mark(content);
+        instance.mark('bb.com');
+      }
+    </script>
+  </body>
+</html>

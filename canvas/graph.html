@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Canvas 图形</title>
+  </head>
+  <body>
+    <canvas id="canvas"></canvas>
+
+    <script>
+      const image = new Image();
+      image.src = '../images/12.jpg';
+
+      image.onload = function () {
+        const canvas = document.querySelector('#canvas');
+        const ctx = canvas.getContext('2d');
+
+        ctx.drawImage(this, 100, 100, 200, 200, 0, 0, 200, 200);
+      };
+    </script>
+  </body>
+</html>

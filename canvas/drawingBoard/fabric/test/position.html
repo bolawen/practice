@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>精确计算 Canvas 位置</title>
+    <style>
+      #canvas {
+        margin-top: 1200px;
+        margin-left: 100px;
+        border: 1px solid black;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="canvas-container">
+      <canvas id="canvas" width="400" height="400"></canvas>
+    </div>
+    <script>
+      const canvas = document.querySelector('#canvas');
+      const canvasWrapper = document.querySelector('.canvas-container');
+
+      function getRelativeOfElPosition(e, el) {
+        const rect = el.getBoundingClientRect();
+        const x = e.pageX - rect.left - window.scrollX;
+        const y = e.pageY - rect.top - window.scrollY;
+        return [x, y];
+      }
+
+      document.addEventListener('click', function (e) {
+        const [x, y] = getRelativeOfElPosition(e, canvas);
+        console.log(x, y);
+      });
+    </script>
+  </body>
+</html>

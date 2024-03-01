@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>React Mini KaSong</title>
+    <script>
+      var process = {
+        env: {
+          NODE_ENV: 'development'
+        }
+      };
+    </script>
+    <script src="../dist/react.iife.js"></script>
+  </head>
+  <body>
+    <div id="root"></div>
+
+    <script>
+      const {
+        ReactDOM: { createRoot },
+        React: { createElement, useState, useEffect, Fragment }
+      } = React;
+
+      function App() {
+        const [value, setValue] = useState(0);
+
+        useEffect(() => {
+          console.log('App Mount');
+          setValue(value + 1);
+        }, []);
+
+        useEffect(() => {
+          console.log('num change create', value);
+          return () => {
+            console.log('num change destroy', value);
+          };
+        }, [value]);
+
+        return createElement('div', {}, value);
+      }
+
+      const root = createRoot(document.getElementById('root'));
+      root.render(createElement(App));
+    </script>
+  </body>
+</html>

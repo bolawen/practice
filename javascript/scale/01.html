@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>缩放模块</title>
+    <style>
+      .container {
+        width: 800px;
+        height: 800px;
+        position: relative;
+        background-color: #f0f0f0;
+      }
+      .draggable {
+        cursor: grab;
+        width: 100px;
+        height: 100px;
+        position: absolute;
+        user-select: none;
+        touch-action: none;
+        background-color: #3498db;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="draggable"></div>
+    </div>
+    <script>
+      const container = document.querySelector('.container');
+      const draggable = document.querySelector('.draggable');
+
+      draggable.style.transformOrigin = `${draggable.offsetWidth / 2}px ${
+        draggable.offsetHeight / 2
+      }px`;
+
+      let isDragging = false;
+      let scale = 1;
+      const maxScale = 5;
+      const minScale = 0.5;
+      const scaleFactor = 0.1;
+
+      const translateXY = {
+        x: 0,
+        y: 0
+      };
+
+      const wheelInvoker = e => {
+        wheelInvoker?.value?.(e);
+      };
+
+      function getRelativeOfElPosition(e, el) {
+        const normalizedE = e.type.startsWith('mouse') ? e : e.targetTouches[0];
+        const rect = el.getBoundingClientRect();
+        let x = normalizedE.pageX - rect.left - window.scrollX;
+        let y = normalizedE.pageY - rect.top - window.scrollY;
+        return [x, y];
+      }
+
+      function onScale(e) {
+        e.preventDefault();
+        if (!e.wheelDelta) {
+          return;
+        }
+
+        let [x, y] = getRelativeOfElPosition(e, draggable);
+        x = x - translateXY.x;
+        y = y - translateXY.y;
+
+        const moveX = (x / scale) * scaleFactor;
+        const moveY = (y / scale) * scaleFactor;
+
+        if (e.wheelDelta > 0) {
+          translateXY.x -= scale >= maxScale ? 0 : moveX;
+          translateXY.y -= scale >= maxScale ? 0 : moveY;
+          scale += scaleFactor;
+        } else {
+          translateXY.x += scale <= minScale ? 0 : moveX;
+          translateXY.y += scale <= minScale ? 0 : moveY;
+          scale -= scaleFactor;
+        }
+
+        scale = Math.min(maxScale, Math.max(scale, minScale));
+
+        draggable.style.transform = `scale(${scale},${scale})`;
+      }
+
+      function run() {
+        document.addEventListener('mousewheel', wheelInvoker, {
+          passive: false
+        });
+        wheelInvoker.value = onScale;
+      }
+
+      run();
+    </script>
+  </body>
+</html>
