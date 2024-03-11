@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hash 路由</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <div id="router-container">
+      <a href="#/home">首页</a>
+      <a href="#/about">关于</a>
+      <a href="#/contact">联系</a>
+    </div>
+
+    <script>
+      class HashRouter {
+        constructor() {
+          this.routes = {};
+          this.currentUrl = "";
+          this.container = document.getElementById("root");
+
+          this.init();
+        }
+
+        init() {
+          window.addEventListener("load", this.refresh.bind(this), false);
+          window.addEventListener("hashchange", this.refresh.bind(this), false);
+        }
+
+        route(path, callback) {
+          this.routes[path] = callback || function () {};
+        }
+
+        refresh() {
+          this.currentUrl = location.hash.slice(1) || "/";
+          this.routes[this.currentUrl]?.();
+        }
+
+        render(html) {
+          this.container.innerHTML = html;
+        }
+
+        push(path) {
+          location.hash = path;
+        }
+      }
+
+      const router = new HashRouter();
+      router.route("/", () => {
+        router.render("<h1>首页</h1>");
+      });
+      router.route("/home", () => {
+        router.render("<h1>首页</h1>");
+      });
+      router.route("/about", () => {
+        router.render("<h1>关于</h1>");
+      });
+      router.route("/contact", () => {
+        router.render("<h1>联系</h1>");
+      });
+    </script>
+  </body>
+</html>
