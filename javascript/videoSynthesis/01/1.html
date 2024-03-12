@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Canvas Stream</title>
+  </head>
+  <body>
+    <script>
+      async function startRecording() {
+        try {
+          // 获取屏幕流
+          const displayStream = await navigator.mediaDevices.getDisplayMedia({
+            video: true,
+          });
+
+          // 获取摄像头流
+          const cameraStream = await navigator.mediaDevices.getUserMedia({
+            video: true,
+          });
+
+          // 创建画布
+          const canvas = document.createElement("canvas");
+          const ctx = canvas.getContext("2d");
+          canvas.width = 1280;
+          canvas.height = 720;
+
+          // 将canvas添加到document中，如果不需要显示可以忽略这步
+          document.body.appendChild(canvas);
+
+          // 绘制视频到Canvas
+          function drawVideo() {
+            // 清空画布
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // 绘制屏幕流
+            ctx.drawImage(
+              displayStream.getVideoTracks()[0],
+              0,
+              0,
+              canvas.width,
+              canvas.height
+            );
+
+            // 绘制摄像头流，可以按需调整大小和位置
+            ctx.drawImage(
+              cameraStream.getVideoTracks()[0],
+              canvas.width - 320,
+              canvas.height - 240,
+              320,
+              240
+            );
+
+            // 持续绘制
+            requestAnimationFrame(drawVideo);
+          }
+
+          drawVideo();
+
+          // 使用canvas流进行录制
+          const mixedStream = canvas.captureStream(30); // 30 FPS
+          const recorder = new MediaRecorder(mixedStream, {
+            mimeType: "video/webm",
+          });
+
+          const chunks = [];
+          recorder.ondataavailable = (event) => chunks.push(event.data);
+          recorder.onstop = () => {
+            const blob = new Blob(chunks, { type: "video/webm" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = "recorded-video.webm";
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+          };
+
+          // 开始录制
+          recorder.start();
+
+          // 设置结束录制的条件，例如10秒后结束
+          setTimeout(() => {
+            recorder.stop();
+          }, 10000);
+        } catch (error) {
+          console.error("Error capturing media:", error);
+        }
+      }
+
+      startRecording();
+    </script>
+  </body>
+</html>
