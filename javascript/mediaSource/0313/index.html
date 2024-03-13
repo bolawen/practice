@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>流媒体播放</title>
+  </head>
+  <body>
+    <video id="video" controls width="640"></video>
+    <script>
+      const video = document.getElementById("video");
+      const mediaSource = new MediaSource();
+      video.src = URL.createObjectURL(mediaSource);
+
+      const videoURL =
+        "https://nickdesaulniers.github.io/netfix/demo/frag_bunny.mp4";
+      const mimeCodeC = 'video/mp4; codecs="avc1.42E01E, mp4a.40.2"';
+
+      function isTypeSupported(mime) {
+        return "MediaSource" in window && MediaSource.isTypeSupported(mime);
+      }
+
+      async function sourceOpenHandler() {
+        const sourceBuffer = mediaSource.addSourceBuffer(mimeCodeC);
+
+        const response = await fetch(videoURL);
+        const data = await response.arrayBuffer();
+
+        sourceBuffer.addEventListener("updateend", () => {
+          if (!sourceBuffer.updating && mediaSource.readyState === "open") {
+            mediaSource.endOfStream();
+          }
+        });
+
+        sourceBuffer.appendBuffer(data);
+      }
+
+      function run() {
+        if (isTypeSupported(mimeCodeC)) {
+          mediaSource.addEventListener("sourceopen", sourceOpenHandler);
+        } else {
+          console.error("Unsupported MIME type or codec: ", mimeCodeC);
+        }
+      }
+
+      run();
+    </script>
+  </body>
+</html>
