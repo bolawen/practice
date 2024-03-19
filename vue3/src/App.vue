@@ -1,12 +1,20 @@
 <template>
   <div>
-    <Child v-model="count"></Child>
+    <div>stateStore.state.name 值为: {{ stateStore.state.name }}</div>
+    <div>
+      stateStore.computedStateName 值为: {{ stateStore.computedStateName }}
+    </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue'
-import Child  from './components/Child.vue'
+import { useStateStore } from "./store/stateStore";
 
-const count = ref(0);
+const stateStore = useStateStore();
+setTimeout(() => {
+  stateStore.updateState({
+    name: "张三",
+  });
+});
 </script>
+./store/stateStore
