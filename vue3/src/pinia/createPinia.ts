@@ -1,13 +1,5 @@
 import { SymbolPinia } from "./rootStore";
-import { App, Ref, effectScope, markRaw, ref } from "vue";
-
-export type Pinia = {
-  _a: any;
-  _e: any;
-  _s: any;
-  state: Ref<any>;
-  install: (app: App) => void;
-};
+import { App, effectScope, markRaw, ref } from "vue";
 
 export function createPinia() {
   // 创建一个 scope 独立空间
@@ -20,7 +12,6 @@ export function createPinia() {
     install(app: App) {
       pinia._a = app;
       app.provide(SymbolPinia, pinia);
-      app.config.globalProperties.$pinia = pinia;
     },
     state, // 记录 state
     _a: null, // 记录 app

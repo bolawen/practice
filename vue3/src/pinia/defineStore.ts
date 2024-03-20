@@ -1,4 +1,3 @@
-import { Pinia } from "pinia";
 import { SymbolPinia } from "./rootStore";
 import {
   computed,
@@ -8,14 +7,47 @@ import {
   reactive,
 } from "vue";
 
-function createOptionsStore(id: any, options: any, pinia: any) {
+function createSetupStore(id, setup, pinia) {
+  let scope;
+  // 创建响应式 store
+  const store = reactive({});
+
+  // _e 能停止所有 store , 每个 store 还可以停止自己的
+  const setupStore = pinia._e.run(() => {
+    scope = effectScope();
+    return scope.run(() => setup());
+  });
+
+  function wrapAction(name, action) {
+    return function () {
+      // 执行 action
+      let ret = action.apply(store, arguments);
+      return ret;
+    };
+  }
+
+  for (let key in setupStore) {
+    const prop = setupStore[key];
+    if (typeof prop === "function") {
+      setupStore[key] = wrapAction(key, prop);
+    }
+  }
+
+  Object.assign(store, setupStore);
+  pinia._s.set(id, store);
+  return store;
+}
+
+function createOptionsStore(id, options, pinia) {
   let { state, getters, actions } = options;
   let scope;
+  // 创建响应式 store
   const store = reactive({});
 
   function setup() {
     pinia.state.value[id] = state ? state() : {};
     const localState = pinia.state.value[id];
+
     return Object.assign(
       localState,
       actions,
@@ -28,6 +60,7 @@ function createOptionsStore(id: any, options: any, pinia: any) {
     );
   }
 
+  // _e 能停止所有 store , 每个 store 还可以停止自己的
   const setupStore = pinia._e.run(() => {
     scope = effectScope();
     return scope.run(() => setup());
@@ -51,9 +84,9 @@ function createOptionsStore(id: any, options: any, pinia: any) {
   pinia._s.set(id, store);
 }
 
-export function defineStore(idOrOptions: any, setup?: any) {
-  let id: string;
-  let options: any;
+export function defineStore(idOrOptions, setup) {
+  let id;
+  let options;
 
   if (typeof idOrOptions === "string") {
     id = idOrOptions;
@@ -66,11 +99,13 @@ export function defineStore(idOrOptions: any, setup?: any) {
 
   function useStore() {
     const currentInstance = getCurrentInstance();
-    const pinia: any = currentInstance && inject(SymbolPinia);
+    const pinia = currentInstance && inject(SymbolPinia);
     if (!pinia._s.has(id)) {
       if (isSetupStore) {
-        createOptionsStore(id, setup, pinia);
+        // setup 为 function 时, 说明为 setup 语法, 创建 setup store
+        createSetupStore(id, setup, pinia);
       } else {
+        // setup 为 object 时, 说明为 options 语法, 创建 options store
         createOptionsStore(id, options, pinia);
       }
     }
