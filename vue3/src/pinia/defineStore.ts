@@ -9,10 +9,8 @@ import {
 
 function createSetupStore(id, setup, pinia) {
   let scope;
-  // 创建响应式 store
   const store = reactive({});
 
-  // _e 能停止所有 store , 每个 store 还可以停止自己的
   const setupStore = pinia._e.run(() => {
     scope = effectScope();
     return scope.run(() => setup());
@@ -20,7 +18,6 @@ function createSetupStore(id, setup, pinia) {
 
   function wrapAction(name, action) {
     return function () {
-      // 执行 action
       let ret = action.apply(store, arguments);
       return ret;
     };
