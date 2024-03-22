@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>分数进度条</title>
+    <style>
+      .fractional-progress-bar {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        position: relative;
+        justify-content: flex-start;
+      }
+      .fractional-progress-bar-container {
+        height: 100px;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .fractional-progress-bar-track {
+        width: 130px;
+        height: 9px;
+        position: relative;
+        background-color: #d9d9d9;
+      }
+      .fractional-progress-bar-slide {
+        width: 80%;
+        height: 100%;
+        position: absolute;
+        background-color: #1e6ee6;
+      }
+      .fractional-progress-bar-current-pos {
+        position: absolute;
+        left: 80%;
+        height: 64%;
+        bottom: -5%;
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        justify-content: center;
+        transform: translate(-50%, 0);
+      }
+      .fractional-progress-bar-current-pos-arrow{
+        width: fit-content;
+      }
+      .fractional-progress-bar-standard-pos {
+        position: absolute;
+        left: 90%;
+        width: 1px;
+        height: 64%;
+        top: -5%;
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        justify-content: center;
+        transform: translate(-50%, 0);
+      }
+      .fractional-progress-bar-standard-pos-arrow{
+        width: fit-content;
+      }
+      .fractional-progress-bar-standard-pos-line {
+        width: 1px;
+        height: 16px;
+        background-color: #1e6ee6;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="fractional-progress-bar">
+      <div class="fractional-progress-bar-container">
+        <div class="fractional-progress-bar-track">
+          <div class="fractional-progress-bar-slide"></div>
+        </div>
+        <div class="fractional-progress-bar-current-pos">
+          <div class="fractional-progress-bar-current-pos-arrow"><</div>
+          <div class="fractional-progress-bar-current-pos-text">80</div>
+        </div>
+        <div class="fractional-progress-bar-standard-pos">
+          <div class="fractional-progress-bar-standard-pos-text">90</div>
+          <div class="fractional-progress-bar-standard-pos-arrow">></div>
+          <div class="fractional-progress-bar-standard-pos-line"></div>
+        </div>
+      </div>
+      <div class="fractional-progress-bar-text">100(满分)</div>
+    </div>
+  </body>
+</html>
