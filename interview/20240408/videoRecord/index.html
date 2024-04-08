@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>视频录制</title>
+</head>
+<body>
+    <div class="video-container">
+        <video id="video" autoplay></video>
+    </div>
+    <div class="operation-container">
+        <button class="start">录制</button>
+        <button class="pause">暂停</button>
+    </div>
+    <div class="capture-canvas-container">
+        <canvas id="capture-canvas"></canvas>
+    </div>
+
+    <script>
+        let stream;
+        let mdeiaRecorder = null;
+        const recorderChunks = [];
+        const video = document.querySelector("#video");
+        const startBtn = document.querySelector('.start');
+        const pauseBtn = document.querySelector(".pause");
+        const captureCanvas = document.querySelector("#capture-canvas");
+        const captureContext = captureCanvas.getContext('2d');
+
+        function getImageDataFromVideoElement(options){
+            context.clearRect(0,0, options.imageDataSize, options.imageDataSize);
+            context.save();
+            context.translate(imageDataSize, 0);
+            context.scale(-1,1);
+            context.drawImage(videoElement, 0, 0, videoSize.width, videoSize.height, 0, 0, imageDataSize, imageDataSize);
+            context.restore();
+
+            const imageData = context.getImageData(0,0,imageDataSize, imageDataSize);
+            const imageDataBuffer = imageData.data.buffer;
+            const imageWidth = imageData.width;
+            const imageHeight = imageData.height;
+
+            return {
+                imageDataBuffer,
+                imageWidth,
+                imageHeight
+            }
+        }
+
+        function captureFrame(){
+            const imageData = getImageDataFromVideoElement({
+                imageDataSize: 320,
+                videoElement: video,
+                context: captureContext,
+                videoSize: { width: video.videoWidth, height: video.videoHeight }
+            });
+        }
+
+        function startRecord(){
+            const timeSlice = 1000;
+            mdeiaRecorder.start(timeSlice);
+            
+            captureFrame();
+        }
+
+        function stopRecord(){
+            const stream = video.srcObject;
+            const tracks = stream.getTracks();
+
+            tracks.forEach(()=>{
+                track.stop();
+            });
+
+            video.srcObject = null;
+
+        }
+
+        function prepareRecord(){
+            stream = navigator.mediaDevices.getUserMedia({
+                video: true,
+                audio: true
+            });
+
+            video.srcObject = stream;
+            video.play();
+
+            mediaRecorder = new MediaRecorder(stream, {
+                mimeType: 'video/webm'
+            });
+            mediaRecorder.ondataavaliable = function(event){
+                if(event.data && event.data.size > 0 ){
+                    recorderChunks.push(event.data);
+                }
+            }
+        }
+
+        async function checkPermission(name){
+            try{
+                return await navigator.permissions.query({name});
+            }catch(error){
+                return {
+                    state: "denied"
+                };
+            }
+        }
+
+        function run(){
+            const camera = checkPermission('camera');
+            const microphone = checkPermission('microphone');
+
+            if(camera.state === 'granted' && microphone.state === 'granted'){
+                prepareRecord();
+                startBtn.addEventListener('click', startRecord);
+                pauseBtn.addEventListener('click', pauseRecord);
+            }else{
+                alert("请开启摄像头和麦克风");
+            }
+        }
+
+        navigator.mediaDevices.getUserMedia()
+
+
+        navigator.mediaDevices.getUserMedia()
+
+        navigator.mediaDevices.getDisplayMedia()
+    </script>
+</body>
+</html>
