@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      //   window.onerror = function (message, source, lineno, colno, error) {
+      //     console.log("message: ", message);
+      //     console.log("source: ", source);
+      //     console.log("lineno: ", lineno);
+      //     console.log("colno: ", colno);
+      //     console.log("error: ", error);
+      //     return true;
+      //   };
+      window.addEventListener("error", function (event) {
+        const { error } = event;
+        console.log("error: ", error.message);
+        console.log("error: ", error.stack);
+      });
+    </script>
+    <script>
+      const array = [1, 2, 3];
+      const obj = { name: "John" };
+
+      array.forEach((item) => {
+        console.log(item);
+        console.log(item());
+      });
+    </script>
+  </body>
+</html>
