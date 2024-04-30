@@ -8,7 +8,6 @@ Sentry.init({
   tracesSampleRate: 1.0,
   replaysSessionSampleRate: 0.1,
   replaysOnErrorSampleRate: 1.0,
-  tracePropagationTargets: ["sentry"],
   dsn: "https://11abcb57930e503bf5003f07e720a08f@o4507168918601728.ingest.us.sentry.io/4507168922402816",
 });
 
