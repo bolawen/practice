@@ -1,0 +1,17 @@
+{
+  "version": 3,
+  "file": "index-Cm-P-61P.js",
+  "sources": [
+    "../index.js"
+  ],
+  "sourcesContent": [
+    "const a = 1;\nconsole.log(a);\n\nconst array = [1, 2, 3, 4, 5];\n\narray.forEach((value, key) => {\n  console.log(\"key\", key);\n  console.log(\"value\", value);\n});\n\nfunction foo() {\n  console.log(\"foo\");\n}\n\nfoo();\n"
+  ],
+  "names": [
+    "array",
+    "value",
+    "key",
+    "foo"
+  ],
+  "mappings": "AACA,QAAQ,IAAI,CAAC,EAEb,MAAMA,EAAQ,CAAC,EAAG,EAAG,EAAG,EAAG,CAAC,EAE5BA,EAAM,QAAQ,CAACC,EAAOC,IAAQ,CAC5B,QAAQ,IAAI,MAAOA,CAAG,EACtB,QAAQ,IAAI,QAASD,CAAK,CAC5B,CAAC,EAED,SAASE,GAAM,CACb,QAAQ,IAAI,KAAK,CACnB,CAEAA,EAAK"
+}
