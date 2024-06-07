@@ -1,0 +1,12 @@
+.tree {
+  .tree-node {
+    .tree-node-indent-list {
+      height: 0;
+      display: inline-block;
+      .tree-node-indent-list-item {
+        width: 16px;
+        display: inline-block;
+      }
+    }
+  }
+}

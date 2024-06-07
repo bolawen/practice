@@ -1,40 +1,107 @@
 <template>
   <div>
-    
+    <Tree :data="data" />
   </div>
 </template>
 
 <script lang="ts" setup>
-import { ref,stop,computed, watch, watchEffect } from 'vue';
+import { ref } from "vue";
+import Tree from "./components/Tree1/tree";
 
-let disposables = [];
-const count = ref(0);
-
-const doubleCount = computed(()=> count.value * 2);
-disposables.push(()=> stop(doubleCount));
-
-const watchCount = watch(()=> count.value, ()=> console.log("watch count", count.value));
-disposables.push(watchCount);
-
-const watchEffectCout = watchEffect(()=> console.log('watchEffect count', count.value));
-disposables.push(watchEffectCout); 
-
-const watchDoubleCount = watch(()=> doubleCount.value, ()=> console.log("watch doubleCount", doubleCount.value));
-disposables.push(watchDoubleCount);
-
-const watchEffectDoubleCount = watchEffect(()=> console.log('watchEffect doubleCount', doubleCount.value));
-disposables.push(watchEffectDoubleCount); 
-
-setTimeout(()=>{
-  count.value++;
-},2000);
-
-setTimeout(()=>{
-  disposables.forEach(dispose=> dispose());
-  disposables = []
-},4000);
-
-setTimeout(()=>{
-  count.value++;
-}, 60000);
+const data = ref<any[]>([
+  {
+    id: 1,
+    pid: 0,
+    label: "1",
+    children: [
+      {
+        id: 11,
+        pid: 1,
+        label: "1-1",
+        children: [
+          {
+            id: 111,
+            pid: 11,
+            label: "1-1-1",
+          },
+          {
+            id: 112,
+            pid: 11,
+            label: "1-1-2",
+          },
+        ],
+      },
+      {
+        id: 12,
+        pid: 1,
+        label: "1-2",
+        children: [
+          {
+            id: 121,
+            pid: 12,
+            label: "1-2-1",
+          },
+          {
+            id: 122,
+            pid: 12,
+            label: "1-2-2",
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: 2,
+    pid: 0,
+    label: "2",
+    children: [
+      {
+        id: 21,
+        pid: 2,
+        label: "2-1",
+        children: [
+          {
+            id: 211,
+            pid: 21,
+            label: "2-1-1",
+          },
+          {
+            id: 212,
+            pid: 21,
+            label: "2-1-2",
+            children: [
+              {
+                id: 2121,
+                pid: 212,
+                label: "2-1-2-1",
+              },
+              {
+                id: 2122,
+                pid: 212,
+                label: "2-1-2-2",
+              },
+            ],
+          },
+        ],
+      },
+      {
+        id: 22,
+        pid: 2,
+        label: "2-2",
+        children: [
+          {
+            id: 221,
+            pid: 22,
+            label: "2-2-1",
+          },
+          {
+            id: 222,
+            pid: 22,
+            label: "2-2-2",
+          },
+        ],
+      },
+    ],
+  },
+]);
 </script>
