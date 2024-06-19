@@ -1,41 +1,28 @@
-function mergeData(ctx, newData, color, originalData) {
-  const oData = originalData.data;
-  let bit;
-  let offset; // 找到 alpha 通道值
+function mergeData(params) {
+  const { ctx, imageData1, imageData2 } = params || {};
 
-  switch (color) {
-    case "R":
-      bit = 0;
-      offset = 3;
-      break;
-    case "G":
-      bit = 1;
-      offset = 2;
-      break;
-    case "B":
-      bit = 2;
-      offset = 1;
-      break;
-  }
+  const data1 = imageData1.data;
+  const data2 = imageData2.data;
 
-  for (var i = 0; i < oData.length; i++) {
-    if (i % 4 == bit) {
-      // 只处理目标通道
-      if (newData[i + offset] === 0 && oData[i] % 2 === 1) {
-        // 没有信息的像素，该通道最低位置0，但不要越界
-        if (oData[i] === 255) {
-          oData[i]--;
-        } else {
-          oData[i]++;
-        }
-      } else if (newData[i + offset] !== 0 && oData[i] % 2 === 0) {
-        // // 有信息的像素，该通道最低位置1，可以想想上面的斑点效果是怎么实现的
-        oData[i]++;
+  for (let i = 0; i < data2.length; i += 4) {
+    if (data1[i + 3] === 0 && data2[i] % 2 === 1) {
+      // data1 alpha 通道值为 0，data2 通道值为奇数
+      if (data2[i] === 255) {
+        data2[i]--;
+      } else {
+        data2[i]++;
+      }
+    } else if (data1[i + 3] !== 0 && data2[i] % 2 === 0) {
+      // data1 alpha 通道值不为 0，data2 通道值为偶数
+      if (data2[i] === 255) {
+        data2[i]--;
+      } else {
+        data2[i]++;
       }
     }
   }
 
-  ctx.putImageData(originalData, 0, 0);
+  ctx.putImageData(imageData2, 0, 0);
 }
 
 function encodeImage(params) {
@@ -54,10 +41,14 @@ function encodeImage(params) {
 
       ctx.font = "30px Microsoft Yahei";
       ctx.fillText(text, 60, 130);
-      textData = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+      textData = ctx.getImageData(0, 0, canvas.width, canvas.height);
       ctx.drawImage(img, 0, 0);
       originalData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-      mergeData(ctx, textData, "R", originalData);
+      mergeData({
+        ctx,
+        imageData1: textData,
+        imageData2: originalData,
+      });
 
       const encodeImg = canvas.toDataURL("image/png");
       resolve(encodeImg);
