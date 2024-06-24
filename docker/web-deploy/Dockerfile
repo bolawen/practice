@@ -1,0 +1,3 @@
+FROM node
+ADD hello.js /
+CMD ["node", "hello.js"]
