@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>可编辑 DIV contenteditableSize</title>
+    <title>可编辑 DIV</title>
     <script src="https://cdn.jsdelivr.net/npm/mark.js@8.11.1/dist/mark.min.js"></script>
     <style>
       /* 输入框 */
@@ -33,6 +33,11 @@
 
     <script>
       let isComposing = false;
+      let composStartContent = "";
+      let composEndContent = "";
+      let range = document.createRange();
+      let selection = window.getSelection();
+
       const divRichEditor = document.querySelector(".div-rich-editor");
       divRichEditor.addEventListener("blur", onBlur);
       divRichEditor.addEventListener("input", onInput);
@@ -42,12 +47,36 @@
       divRichEditor.addEventListener("compositionend", onCompositionEnd);
       divRichEditor.addEventListener("compositionstart", onCompositionStart);
 
+      function limitInput(params) {
+        const { e, prevContent } = params;
+
+        const clientHeight = divRichEditor.clientHeight;
+        const scrollHeight = divRichEditor.scrollHeight;
+
+        if (scrollHeight > clientHeight) {
+          e?.preventDefault?.();
+          divRichEditor.textContent =
+            prevContent || divRichEditor.textContent.slice(0, -1);
+          range.selectNodeContents(divRichEditor);
+          range.collapse(false);
+          selection.removeAllRanges();
+          selection.addRange(range);
+        }
+      }
+
       function onInput(event) {
+        range = document.createRange();
+        selection = window.getSelection();
+
         if (isComposing) {
           return;
         }
+
         const value = event.target.textContent;
         console.log("onInput", value);
+        limitInput({
+          e: event,
+        });
       }
       function onBlur(event) {
         const value = event.target.textContent;
@@ -68,12 +97,18 @@
       function onCompositionStart(event) {
         isComposing = true;
         const value = event.target.textContent;
-        console.log("onCompositionStart", vlaue);
+        composStartContent = value;
+        console.log("onCompositionStart", value);
       }
       function onCompositionEnd(event) {
         isComposing = false;
         const value = event.target.textContent;
+        composEndContent = value;
         console.log("onCompositionEnd", value);
+        limitInput({
+          e: event,
+          prevContent: composStartContent,
+        });
       }
     </script>
   </body>
