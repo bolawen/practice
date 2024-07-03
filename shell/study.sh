@@ -1,7 +1,11 @@
 #!/usr/bin/env bash
 
-# 设置变量
-a=1
-b=2
+a=3
+b=4
 
-echo "a = ${a}, b = ${b}"
+if [ ! ${a} -eq ${b} ];
+then
+    echo "a is not equal to b"
+else
+    echo "a is equal to b"
+fi
