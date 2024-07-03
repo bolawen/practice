@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      const htmlStr =
+        `<div>
+            <h1>DOM Parser</h1> 
+            <div> 
+                <p>为人进出的门紧锁着</p>
+                <p>为够爬出的洞敞开着</p>
+            </div>
+        </div>`;
+
+        function parserDomText(htmlStr){
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = htmlStr;
+            return tempDiv.textContent || tempDiv.innerText || "";
+        }
+
+        function removeSpacesAndTabs(input){
+            return input.replace(/\s+/g, '')
+        }
+
+        const text = parserDomText(htmlStr);
+        console.log("text",text);
+        console.log("removeSpacesAndTabs",removeSpacesAndTabs(text));
+    </script>
+  </body>
+</html>
