@@ -11,14 +11,14 @@ declare module "@tiptap/core" {
   }
 }
 
-export const VidevideoExtension = Node.create({
+export const VideoExtension = Node.create({
   name: "video",
   group: "block",
   defaultOptions: {
     HTMLAttributes: {
       controls: true,
       controlslist: "nodownload",
-      class: "umu-rich-text__video",
+      class: "ritch-text-editor-video",
     },
   },
   addAttributes() {

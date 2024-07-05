@@ -1,4 +1,5 @@
 import { Editor } from "@tiptap/react";
+import { defaultBubbleMenu } from "./menuMap";
 
 type BubbleMenuChildrenProps = {
   editor: Editor;
@@ -8,30 +9,13 @@ function BubbleMenuChildren(props: BubbleMenuChildrenProps) {
 
   return (
     <div className="bubble-menu__menu-list">
-      <div className="bubble-menu__menu-item">
-        <button
-          onClick={() => editor.chain().focus().toggleBold().run()}
-          className={editor.isActive("bold") ? "is-active" : ""}
-        >
-          Bold
-        </button>
-      </div>
-      <div className="bubble-menu__menu-item">
-        <button
-          onClick={() => editor.chain().focus().toggleItalic().run()}
-          className={editor.isActive("italic") ? "is-active" : ""}
-        >
-          Italic
-        </button>
-      </div>
-      <div className="bubble-menu__menu-item">
-        <button
-          onClick={() => editor.chain().focus().toggleStrike().run()}
-          className={editor.isActive("strike") ? "is-active" : ""}
-        >
-          Strike
-        </button>
-      </div>
+      {defaultBubbleMenu.map((menu, index) => {
+        return (
+          <div className="bubble-menu__menu-item" key={index}>
+            {menu(editor)}
+          </div>
+        );
+      })}
     </div>
   );
 }

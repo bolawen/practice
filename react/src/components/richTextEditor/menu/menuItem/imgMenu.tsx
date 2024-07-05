@@ -18,18 +18,19 @@ function ImgMenu(props: ImgMenuProps) {
   };
 
   return (
-    <div className="menu-item__img-menu">
+    <div className="menu-item-container menu-item__img-menu">
       <label
-        className="img-menu__label"
+        className="menu-item img-menu__label"
         htmlFor="img-menu__upload__input__uniqueId"
       >
         图片
         <input
           hidden
           type="file"
+          accept="image/*"
           onChange={onInputChange}
-          id="img-menu__upload__input__uniqueId"
           className="img-menu__select-panel"
+          id="img-menu__upload__input__uniqueId"
         />
       </label>
     </div>

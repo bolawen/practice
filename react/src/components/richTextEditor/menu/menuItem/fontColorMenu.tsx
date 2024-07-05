@@ -16,9 +16,9 @@ function FontColorMenu(props: FontColorMenuProps) {
   };
 
   return (
-    <div className="menu-item__font-color-menu">
+    <div className="menu-item-container menu-item__font-color-menu">
       <label
-        className="font-color-menu__label"
+        className="menu-item font-color-menu__label"
         htmlFor="font-color-menu__select-panel__uniqueId"
       >
         字体颜色

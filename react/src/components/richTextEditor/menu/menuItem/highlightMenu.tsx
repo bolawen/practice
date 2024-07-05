@@ -17,9 +17,9 @@ function HighlightMenu(props: HighlightMenuProps) {
   };
 
   return (
-    <div className="menu-item__highlight-menu">
+    <div className="menu-item-container menu-item__highlight-menu">
       <label
-        className="highlight-menu__label"
+        className="menu-item highlight-menu__label"
         htmlFor="highlight-menu__select-panel__uniqueId"
       >
         背景颜色

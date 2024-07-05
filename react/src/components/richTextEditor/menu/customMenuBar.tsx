@@ -1,5 +1,5 @@
-import { menuMap } from "./menuMap";
 import { Editor } from "@tiptap/react";
+import { defautltCustomMenuBar } from "./menuMap";
 
 type MenuBarProps = {
   editor: Editor;
@@ -11,9 +11,11 @@ function CustomMenuBar(props: MenuBarProps) {
   return (
     <div className="menu-bar">
       <div className="menu-bar-list">
-        {Object.keys(menuMap).map((menuKey,index) => {
+        {defautltCustomMenuBar.map((menu, index) => {
           return (
-            <div key={index} className="menu-bar-item">{menuMap[menuKey](editor)}</div>
+            <div key={index} className="menu-bar-item">
+              {menu(editor)}
+            </div>
           );
         })}
       </div>

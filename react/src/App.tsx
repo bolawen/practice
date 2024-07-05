@@ -1,17 +1,24 @@
-import { useState } from "react";
+import { useRef } from "react";
 import RichTextEditor from "./components/richTextEditor/richTextEditor";
 
 function App() {
-  const [content, setContent] = useState<string>("<p>Initial content</p>");
+  const contentRef = useRef({
+    htmlContent: "",
+    textContent: "",
+  });
 
   const onUpdate = (htmlContent: string, textContent: string) => {
-    console.log(htmlContent, textContent);
-    setContent(htmlContent);
+    contentRef.current.htmlContent = htmlContent;
+    contentRef.current.textContent = textContent;
+    console.log("contentRef.current: ", contentRef.current);
   };
 
   return (
     <div className="app">
-      <RichTextEditor content={content} onUpdate={onUpdate} />
+      <RichTextEditor
+        content={contentRef.current.htmlContent}
+        onUpdate={onUpdate}
+      />
     </div>
   );
 }

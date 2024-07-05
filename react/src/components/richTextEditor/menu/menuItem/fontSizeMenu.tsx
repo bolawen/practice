@@ -31,9 +31,12 @@ function FontSizeMenu(props: FontSizeMenuProps) {
   }, []);
 
   return (
-    <div className="menu-item__font-size-menu">
-      <div className="font-size-menu__trigger">
-        <button onClick={() => setShowModal(true)}>{fontSize + "px"}</button>
+    <div className="menu-item-container menu-item__font-size-menu">
+      <div
+        className="menu-item font-size-menu__trigger"
+        onClick={() => setShowModal(true)}
+      >
+        {fontSize + "px"}
       </div>
       {showModal && (
         <div className="font-size-menu__select-panel">

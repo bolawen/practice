@@ -12,7 +12,7 @@ export const isVideoSrc = (src: string) => {
   return supportVideoDomain.some((type) => src.includes(type));
 };
 
-export const iframeClass = "umu-rich-text__iframe";
+export const iframeClass = "rich-text-editor-iframe";
 
 function replaceVimeoUrl(url: string) {
   if (url.includes("player.vimeo.com")) {

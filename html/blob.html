@@ -6,36 +6,25 @@
     <title>Blob Video</title>
   </head>
   <body>
-    <video controls></video>
+    <input type="file" accept="video/*" />
     <script>
-      const video = document.querySelector('video');
-      const url = 'http://127.0.0.1:5502/test/html/assets/video1.mp4';
+      function handleFileSelect(evt) {
+        const file = evt.target.files[0];
+        const reader = new FileReader();
+        reader.readAsArrayBuffer(file);
+        reader.onload = function (e) {
+          const videoBlob = new Blob([e.target.result], { type: file.type });
+          const blobUrl = URL.createObjectURL(videoBlob);
 
-      const getVideoWebmBlobUrl = async url => {
-        const response = await fetch(url);
-        const arrayBuffer = await response.arrayBuffer();
-        const blob = new Blob([arrayBuffer], { type: 'video/webm' });
-        window.URL = window.URL || window.webkitURL;
-        const blobUrl = window.URL.createObjectURL(blob);
-        return blobUrl;
-      };
+          const video = document.createElement("video");
+          video.src = blobUrl;
+          video.controls = true;
+          document.body.appendChild(video);
+        };
+      }
 
-      const transformOfWebmToMp4Blob = async url => {
-        const response = await fetch(url);
-        const arrayBuffer = await response.arrayBuffer();
-        const blob = new Blob([arrayBuffer], { type: 'video/mp4' });
-        window.URL = window.URL || window.webkitURL;
-        const blobUrl = window.URL.createObjectURL(blob);
-        return blobUrl;
-      };
-
-      const run = async () => {
-        let blobUrl = await getVideoWebmBlobUrl(url);
-        blobUrl = await transformOfWebmToMp4Blob(blobUrl);
-        video.src = blobUrl;
-      };
-
-      run();
+      const inputEl = document.querySelector("input");
+      inputEl.addEventListener("change", handleFileSelect);
     </script>
   </body>
 </html>

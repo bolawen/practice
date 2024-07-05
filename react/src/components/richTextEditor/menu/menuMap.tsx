@@ -1,104 +1,83 @@
+import HMenu from "./menuItem/hMenu";
+import DoMenu from "./menuItem/doMenu";
 import { Editor } from "@tiptap/react";
+import ImgMenu from "./menuItem/imgMenu";
+import CodeMenu from "./menuItem/codeMenu";
+import BoldMenu from "./menuItem/boldMenu";
 import LinkMenu from "./menuItem/linkMenu";
+import TableMenu from "./menuItem/tableMenu";
+import VideoMenu from "./menuItem/videoMenu";
+import ItalicMenu from "./menuItem/italicMenu";
+import IframeMenu from "./menuItem/iframeMenu";
+import StrikeMenu from "./menuItem/strikeMenu";
 import FontSizeMenu from "./menuItem/fontSizeMenu";
 import FontColorMenu from "./menuItem/fontColorMenu";
 import HighlightMenu from "./menuItem/highlightMenu";
 import TextAlignMenu from "./menuItem/textAlignMenu";
-import ImgMenu from "./menuItem/imgMenu";
-import VideoMenu from "./menuItem/videoMenu";
+import UnderlineMenu from "./menuItem/underlineMenu";
+import OrderedListMenu from "./menuItem/orderedListMenu";
+import BulletListMenuMenu from "./menuItem/bulletListMenu";
+import YoutubeVideoMenu from "./menuItem/youtubeVideoMenu";
+import UnsetAllMarksMenu from "./menuItem/unsetAllMarksMenu";
 
-const undo = (editor: Editor) => {
-  const onClick = () => {
-    editor.chain().focus().undo().run();
-  };
-  return <button onClick={onClick}>撤销</button>;
+const hMenu = (editor: Editor) => {
+  return <HMenu editor={editor} />;
 };
 
-const redo = (editor: Editor) => {
-  const onClick = () => {
-    editor.chain().focus().redo().run();
-  };
-  return <button onClick={onClick}>重做</button>;
+const doMenu = (editor: Editor) => {
+  return <DoMenu editor={editor} />;
 };
 
-const unsetAllMarks = (editor: Editor) => {
-  const onClick = () => {
-    editor.chain().focus().unsetAllMarks().run();
-  };
-  return <button onClick={onClick}>清除格式</button>;
+const unsetAllMarksMenu = (editor: Editor) => {
+  return <UnsetAllMarksMenu editor={editor} />;
 };
 
-const fontSize = (editor: Editor) => {
+const fontSizeMenu = (editor: Editor) => {
   return <FontSizeMenu editor={editor} />;
 };
 
-const bold = (editor: Editor) => {
-  const onClick = () => {
-    editor.chain().focus().toggleBold().run();
-  };
-
-  return <button onClick={onClick}>加粗</button>;
+const boldMenu = (editor: Editor) => {
+  return <BoldMenu editor={editor} />;
 };
 
-const italic = (editor: Editor) => {
-  const onClick = () => {
-    editor.chain().focus().toggleItalic().run();
-  };
-
-  return <button onClick={onClick}>斜体</button>;
+const italicMenu = (editor: Editor) => {
+  return <ItalicMenu editor={editor} />;
 };
 
-const underline = (editor: Editor) => {
-  const onClick = () => {
-    editor.chain().focus().toggleUnderline().run();
-  };
-
-  return <button onClick={onClick}>下划线</button>;
+const underlineMenu = (editor: Editor) => {
+  return <UnderlineMenu editor={editor} />;
 };
 
-const strike = (editor: Editor) => {
-  const onClick = () => {
-    editor.chain().focus().toggleStrike().run();
-  };
-
-  return <button onClick={onClick}>删除线</button>;
+const strikeMenu = (editor: Editor) => {
+  return <StrikeMenu editor={editor} />;
 };
 
-const color = (editor: Editor) => {
+const fontColorMenu = (editor: Editor) => {
   return <FontColorMenu editor={editor} />;
 };
 
-const highlight = (editor: Editor) => {
+const highlightMenu = (editor: Editor) => {
   return <HighlightMenu editor={editor} />;
 };
 
-const orderedList = (editor: Editor) => {
-  const onClick = () => {
-    editor.chain().focus().toggleOrderedList().run();
-  };
-  return <button onClick={onClick}>序号列表</button>;
+const orderedListMenu = (editor: Editor) => {
+  return <OrderedListMenu editor={editor} />;
 };
 
-const bulletList = (editor: Editor) => {
-  const onClick = () => {
-    editor.chain().focus().toggleBulletList().run();
-  };
-  return <button onClick={onClick}>符号列表</button>;
+const bulletListMenu = (editor: Editor) => {
+  return <BulletListMenuMenu editor={editor} />;
 };
 
-const textAlign = (editor: Editor) => {
+const textAlignMenu = (editor: Editor) => {
   return <TextAlignMenu editor={editor} />;
 };
 
-const link = (editor: Editor) => {
+const linkMenu = (editor: Editor) => {
   return <LinkMenu editor={editor} />;
 };
 
-const codeBlockLowlight = (editor: Editor) => {
-  const onClick = () => {
-    editor.chain().focus().toggleCode().run();
-  };
-  return <button onClick={onClick}>代码块</button>;
+const codeMenu = (editor: Editor) => {
+  return <CodeMenu editor={editor} />;
 };
 
 const imgMenu = (editor: Editor) => {
@@ -109,22 +88,46 @@ const videoMenu = (editor: Editor) => {
   return <VideoMenu editor={editor} />;
 };
 
-export const menuMap: { [key: string]: any } = {
-  undo,
-  redo,
-  unsetAllMarks,
-  fontSize,
-  bold,
-  italic,
-  underline,
-  strike,
-  color,
-  highlight,
-  orderedList,
-  bulletList,
-  textAlign,
-  link,
-  codeBlockLowlight,
+const youtubeVideoMenu = (editor: Editor) => {
+  return <YoutubeVideoMenu editor={editor} />;
+};
+
+const iframeMenu = (editor: Editor) => {
+  return <IframeMenu editor={editor} />;
+};
+
+const tableMenu = (editor: Editor) => {
+  return <TableMenu editor={editor} />;
+};
+
+export const defaultFloatingMenu = [hMenu, bulletListMenu];
+
+export const defaultBubbleMenu = [
+  boldMenu,
+  italicMenu,
+  underlineMenu,
+  strikeMenu,
+];
+
+export const defautltCustomMenuBar = [
+  doMenu,
+  hMenu,
+  unsetAllMarksMenu,
+  fontSizeMenu,
+  boldMenu,
+  italicMenu,
+  underlineMenu,
+  strikeMenu,
+  fontColorMenu,
+  highlightMenu,
+  orderedListMenu,
+  bulletListMenu,
+  textAlignMenu,
+  linkMenu,
+  codeMenu,
   imgMenu,
   videoMenu,
-};
+  youtubeVideoMenu,
+  iframeMenu,
+  tableMenu,
+];
