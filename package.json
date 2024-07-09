@@ -9,5 +9,9 @@
     "mkdir": "node scripts/mkdir.js",
     "push": "git add . && git commit -m 推送 && git push origin master",
     "pull": "git fetch --all && git reset --hard origin/master && git pull origin master"
+  },
+  "dependencies": {
+    "koa": "^2.15.3",
+    "koa-router": "^12.0.1"
   }
 }

@@ -1,0 +1,19 @@
+services:
+  mysql:
+    image: mysql/mysql-server
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+    ports:
+      - "3306:3306"
+    volumes:
+      - ~/docker/mysql/log:/var/log/mysql
+      - ~/docker/mysql/data:/var/lib/mysql
+      - ~/docker/mysql/conf:/etc/mysql
+      - ~/docker/mysql/conf.d:/etc/mysql/conf.d
+    networks:
+      - mysqlnet
+
+networks:
+  mysqlnet:
+    driver: bridge

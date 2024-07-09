@@ -1,0 +1,14 @@
+services:
+  node-hello-world:
+    image: node-hello-world
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    networks:
+      - node-hello-world-network
+
+networks:
+  node-hello-world-network:
+    driver: bridge
