@@ -1,0 +1,25 @@
+.text-container {
+  max-width: 800px;
+  font-size: 14px;
+  line-height: 2;
+}
+
+.text-content {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-wrap: break-word;
+  word-break: break-word;
+  text-justify: inter-character;
+  text-align: justify;
+  white-space: pre-line;
+  max-height: 84px;
+}
+
+.text-placeholder {
+  float: right;
+}
+
+.text-overflow-tag {
+  float: right;
+  clear: both;
+}

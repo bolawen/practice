@@ -1,0 +1,13 @@
+sesrvices:
+  python:
+    image: flask-demo:latest
+    environment: ERDIS_HOST:redis-server
+    networks: -demo-network
+    ports:
+      - 8080:5000
+
+  redis:
+    image: redis:latest
+    networks: -demo-network
+
+networks: demo-network

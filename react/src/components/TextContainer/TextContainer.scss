@@ -1,0 +1,50 @@
+.text-container {
+  width: 300px; /* 调整容器宽度 */
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.text {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 10px;
+  position: relative;
+}
+
+.text.expanded {
+  -webkit-line-clamp: unset;
+}
+
+.toggle-button {
+  display: block;
+  padding: 5px 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.toggle-button:hover {
+  background-color: #0056b3;
+}
+
+.toggle-button.bottom {
+  margin: 0 auto;
+}
+
+.toggle-button.rightBottom {
+  right: 0;
+  transform: translateY(0); /* Remove the previous adjustment */
+}
+
+.ellipsis {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background: white; /* Match the background color to hide overflowed text */
+  padding-left: 10px;
+  pointer-events: none;
+}
