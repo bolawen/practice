@@ -1,57 +1,126 @@
-import { CSSProperties } from "react";
+import "./TextContainerOfLineClamp.scss";
+import { CSSProperties, useEffect, useRef, useState } from "react";
 
 type TextContainerOfLineClampProps = {
-  maxLines: number;
-
-  text: JSX.Element | string;
+  width?: string;
+  maxLines?: number;
+  singleMode?: boolean;
+  children?: JSX.Element;
+  onlyShowExpand?: boolean;
+  text?: JSX.Element | string;
+  expandNode?: JSX.Element | string;
+  collapseNode?: JSX.Element | string;
 };
 
-function TextContainerOfLineClamp(props: TextContainerOfLineClampProps) {
-  const { text, maxLines } = props;
+const infinityLines = 9999;
 
-  const textContainerStyle = {
-    width: "200px",
+function TextContainerOfLineClamp(props: TextContainerOfLineClampProps) {
+  const {
+    text,
+    children,
+    maxLines = 1,
+    width = "100%",
+    expandNode = "",
+    collapseNode = "",
+    singleMode = false,
+    onlyShowExpand = false,
+  } = props;
+
+  const [isOverflow, setIsOverflow] = useState(false);
+  const textContentRef = useRef<HTMLDivElement>(null);
+  const [isExpanded, setIsExpanded] = useState(false);
+  const overflowToggleTagRef = useRef<HTMLDivElement>(null);
+  const overflowPlaceholderRef = useRef<HTMLDivElement>(null);
+
+  const textContainerStyle: CSSProperties = {
+    width,
     display: "flex",
   };
 
-  const textStyle: CSSProperties = {
+  const textContentStyle: CSSProperties = {
     overflow: "hidden",
     position: "relative",
     display: "-webkit-box",
-    WebkitLineClamp: maxLines,
     WebkitBoxOrient: "vertical",
+    WebkitLineClamp: isExpanded ? infinityLines : maxLines,
   };
 
-  const textBeforeStyle: CSSProperties = {
-    float: "right",
-    width: "0",
-    height: "calc(100% - 22px)",
+  const checkTextOverflow = () => {
+    if (!textContentRef.current) {
+      return;
+    }
+
+    const { scrollHeight, clientHeight } = textContentRef.current;
+    setIsOverflow(scrollHeight > clientHeight);
   };
 
-  const textAfterStyle: CSSProperties = {
-    position: "absolute",
-    width: "100%",
-    height: "100%",
-    backgroundColor: "#fff",
+  const computedOverflowPlaceholderHeight = () => {
+    if (!overflowPlaceholderRef.current || !overflowToggleTagRef.current) {
+      return;
+    }
+
+    overflowPlaceholderRef.current.style.height = `calc(100% - ${overflowToggleTagRef.current.clientHeight}px)`;
   };
 
-  const overflowTagStyle: CSSProperties = {
-    float: "right",
-    clear: "both",
+  const handleToggleOverflowTag = () => {
+    if (onlyShowExpand) {
+      return;
+    }
+    setIsExpanded(!isExpanded);
   };
+
+  useEffect(() => {
+    checkTextOverflow();
+
+    window.addEventListener("resize", checkTextOverflow);
+    return () => {
+      window.removeEventListener("resize", checkTextOverflow);
+    };
+  }, []);
+
+  useEffect(() => {
+    computedOverflowPlaceholderHeight();
+  }, [isExpanded]);
 
   return (
-    <div className="text-container-of-line-clamp">
+    <div className="text-container-of-line-clamp" style={{ width }}>
       <div className="text-container" style={textContainerStyle}>
-        <div className="text" style={textStyle}>
-          <div className="text-before" style={textBeforeStyle}></div>
-          <div className="overflow-tag" style={overflowTagStyle}>
-            展开
-          </div>
-          {text}
-          <div className="text-after" style={textAfterStyle}></div>
+        <div
+          ref={textContentRef}
+          className="text-content"
+          style={textContentStyle}
+        >
+          {!singleMode && isOverflow && (
+            <>
+              <div
+                ref={overflowPlaceholderRef}
+                className="overflow-placeholder"
+              ></div>
+              <div
+                ref={overflowToggleTagRef}
+                className={`overflow-toggle-tag inline-mode ${
+                  onlyShowExpand ? "only-show-expand" : ""
+                }`}
+                onClick={handleToggleOverflowTag}
+              >
+                {isExpanded ? collapseNode : expandNode}
+              </div>
+            </>
+          )}
+          {text || children}
         </div>
       </div>
+      {singleMode && isOverflow && (
+        <div
+          ref={overflowToggleTagRef}
+          className={`overflow-toggle-tag block-mode ${
+            onlyShowExpand ? "only-show-expand" : ""
+          }`}
+          onClick={handleToggleOverflowTag}
+        >
+          {isExpanded ? collapseNode : expandNode}
+        </div>
+      )}
     </div>
   );
 }

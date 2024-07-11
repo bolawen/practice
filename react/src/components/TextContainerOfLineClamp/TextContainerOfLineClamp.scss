@@ -1,0 +1,32 @@
+.text-container-of-line-clamp {
+  .text-container {
+    .text-content {
+      .overflow-placeholder {
+        width: 0;
+        float: right;
+        height: calc(100% - 22px);
+      }
+    }
+  }
+  .overflow-toggle-tag {
+    clear: both;
+    float: right;
+
+    &:not(.only-show-expand) {
+      cursor: pointer;
+      color: #007bff;
+    }
+
+    &.block-mode {
+      float: unset;
+      display: flex;
+      margin-top: 24px;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+}
+
+p {
+  margin: 0;
+}
