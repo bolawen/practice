@@ -80,7 +80,7 @@ function TextContainerOfLineClamp(props: TextContainerOfLineClampProps) {
 
   useEffect(() => {
     computedOverflowPlaceholderHeight();
-  }, [isExpanded]);
+  }, [isOverflow,isExpanded]);
 
   return (
     <div className="text-container-of-line-clamp" style={{ width }}>
