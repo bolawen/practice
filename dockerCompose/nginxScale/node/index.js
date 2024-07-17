@@ -1,17 +1,30 @@
-const ip = require("ip");
-const Koa = require("koa");
-const KoaRouter = require("koa-router");
+const http = require("http");
+const os = require("os");
+const PORT = 3000;
 
-const app = new Koa();
-const router = new KoaRouter();
+const getIpAddress = () => {
+  const interfaces = os.networkInterfaces();
+  for (let iface in interfaces) {
+    for (let alias of interfaces[iface]) {
+      if (alias.family === "IPv4" && !alias.internal) {
+        return alias.address;
+      }
+    }
+  }
+  return "0.0.0.0";
+};
 
-router.get("/", async (ctx) => {
-  const serviceIp = ip.address();
-  ctx.body = "Hello World!" + "IP 地址为:" + serviceIp;
+const server = http.createServer((req, res) => {
+  const containerIp = getIpAddress();
+  const requestIp = req.headers["x-forwarded-for"] || req.socket.remoteAddress;
+
+  res.statusCode = 200;
+  res.setHeader("Content-Type", "text/plain");
+  res.end(
+    `Hello from Node.js\nYour IP address is ${requestIp}\nContainer IP address is ${containerIp}\n`
+  );
 });
 
-app.use(router.routes());
-
-app.listen(3000, () => {
-  console.log("Server is running on port 3000");
+server.listen(PORT, () => {
+  console.log(`Server running at port ${PORT}`);
 });
