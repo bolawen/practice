@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      .container {
+        width: 800px;
+        height: 800px;
+        position: relative;
+        border: 1px solid #000;
+      }
+      .draggable {
+        width: 100px;
+        height: 100px;
+        background-color: red;
+        position: absolute;
+        cursor: grab;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="draggable"></div>
+    </div>
+
+    <script>
+      let isDragging = false;
+      let downXY = { x: 0, y: 0 };
+      const container = document.querySelector(".container");
+      const draggable = document.querySelector(".draggable");
+
+      function computeMousedownXY(e, draggable) {
+        const rect = draggable.getBoundingClientRect();
+        const normalizedE = e.type.startsWith("mouse") ? e : e.targetTouches[0];
+
+        let x = normalizedE.pageX - rect.left - window.scrollX;
+        let y = normalizedE.pageY - rect.top - window.scrollY;
+        return [x, y];
+      }
+
+      function computeMousemoveXY({ e, downXY, container, draggable }) {
+        const containerRect = container.getBoundingClientRect();
+        const normalizedE = e.type.startsWith("mouse") ? e : e.targetTouches[0];
+        const x = normalizedE.pageX - downXY.x - containerRect.left;
+        const y = normalizedE.pageY - downXY.y - containerRect.top;
+        return [x, y];
+      }
+
+      function limitDrag({ x, y, draggable, container }) {
+        const rect = draggable.getBoundingClientRect();
+        const containerRect = container.getBoundingClientRect();
+
+        x = Math.max(Math.min(x, containerRect.width - rect.width), 0);
+        y = Math.max(Math.min(y, containerRect.height - rect.height), 0);
+
+        draggable.style.left = x + "px";
+        draggable.style.top = y + "px";
+      }
+
+      function onMouseDown(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        const [x, y] = computeMousedownXY(e, draggable);
+        downXY = { x, y };
+
+        isDragging = true;
+        draggable.style.cursor = "grabbing";
+      }
+
+      function onMouseMove(e) {
+        if (!isDragging) return;
+        e.preventDefault();
+        e.stopPropagation();
+
+        const [x, y] = computeMousemoveXY({ e, downXY, container, draggable });
+
+        requestAnimationFrame(() =>
+          limitDrag({
+            x,
+            y,
+            draggable,
+            container,
+          })
+        );
+      }
+
+      function onMouseUp(e) {
+        if (!isDragging) return;
+        e.preventDefault();
+        isDragging = false;
+        draggable.style.cursor = "grab";
+      }
+
+      function run() {
+        draggable.addEventListener("mousedown", onMouseDown);
+        document.addEventListener("mousemove", onMouseMove);
+        document.addEventListener("mouseup", onMouseUp);
+
+        draggable.addEventListener("touchstart", onMouseDown);
+        document.addEventListener("touchmove", onMouseMove);
+        document.addEventListener("touchend", onMouseUp);
+      }
+
+      run();
+    </script>
+  </body>
+</html>

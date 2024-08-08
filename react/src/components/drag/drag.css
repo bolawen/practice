@@ -1,0 +1,14 @@
+.container {
+  width: 800px;
+  height: 800px;
+  position: relative;
+  border: 1px solid #000;
+}
+
+.draggable {
+  width: 100px;
+  height: 100px;
+  background-color: red;
+  position: absolute;
+  cursor: grab;
+}
