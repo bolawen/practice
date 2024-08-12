@@ -1,6 +1,5 @@
 <template>
-  <div>
-    <div><router-link to="/">Home</router-link></div>
-    <router-view></router-view>
+  <div class="vite-vue-micro-app">
+    <h1>Vite Vue Micro App 子应用</h1>
   </div>
 </template>

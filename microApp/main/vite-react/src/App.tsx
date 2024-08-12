@@ -6,8 +6,8 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Home />}></Route>
-        <Route path="/micro-app-list" element={<MicroAppList />}></Route>
+        <Route path="/" element={<Home />} />
+        <Route path="/micro-app-list/*" element={<MicroAppList />} />
       </Routes>
     </BrowserRouter>
   );

@@ -1,0 +1,23 @@
+.micro-app-list .content .tabs {
+  gap: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.micro-app-list .content .tabs .tab {
+  cursor: pointer;
+}
+
+.micro-app-list .content .tabs .tab__active {
+  color: red;
+  font-weight: 600;
+}
+
+.micro-app-list .content .micro-view-list {
+  margin-top: 24px;
+}
+
+.micro-app-list .content .micro-view-item.micro-view-item__inactive {
+  display: none;
+}
