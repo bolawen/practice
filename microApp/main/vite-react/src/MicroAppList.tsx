@@ -1,7 +1,7 @@
 import "./MicroAppList.css";
-import microApp from "@micro-zoe/micro-app";
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import microApp, { EventCenterForMicroApp } from "@micro-zoe/micro-app";
 
 const microApps = [
   {
@@ -105,6 +105,46 @@ function MicroAppList() {
   const onMenuClick = (name: string) => {
     navigate(`/micro-app-list/${name}`);
   };
+
+  const onMicroAppMounted = (data: {
+    appName: string;
+    evnetType: string;
+    communicationName: string;
+  }) => {
+    const { appName, communicationName } = data;
+    microApp.setData(communicationName, data);
+    console.log(`onMicroAppMounted: ${appName}`);
+  };
+
+  const onMicroAppUnmounted = (data: {
+    appName: string;
+    evnetType: string;
+    communicationName: string;
+  }) => {
+    const { appName } = data;
+    console.log(`onMicroAppUnmounted: ${appName}`);
+  };
+
+  const commonAppDataListener = (data: {
+    appName: string;
+    evnetType: string;
+    communicationName: string;
+  }) => {
+    const { evnetType } = data;
+
+    if (evnetType === "onMicroAppMounted") {
+      onMicroAppMounted(data);
+    } else if (evnetType === "onMicroAppUnmounted") {
+      onMicroAppUnmounted(data);
+    }
+  };
+
+  useEffect(() => {
+    (window as any).microEventCenterForCommonApp = new EventCenterForMicroApp(
+      "commonApp"
+    );
+    microApp.addDataListener("commonApp", commonAppDataListener);
+  }, []);
 
   useEffect(() => {
     handlePathChange();
