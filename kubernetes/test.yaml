@@ -1,0 +1,183 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: my-pod
+  namespace: default
+  labels:
+    app: my-app
+  annotations:
+    annotation-key: annotation-value
+  finalizers:
+    - kubernetes
+  ownerReferences:
+    - apiVersion: apps/v1
+      kind: ReplicaSet
+      name: my-replicaset
+      uid: 12345678-1234-1234-1234-123456789012
+
+spec:
+  containers:
+  - name: my-container
+    image: nginx:1.19.0
+    imagePullPolicy: IfNotPresent
+    ports:
+    - containerPort: 80
+      protocol: TCP
+    env:
+    - name: ENV_VAR
+      value: "production"
+    - name: ENV_VAR_FROM_CONFIG
+      valueFrom:
+        configMapKeyRef:
+          name: my-config
+          key: config-key
+    resources:
+      requests:
+        memory: "64Mi"
+        cpu: "250m"
+      limits:
+        memory: "128Mi"
+        cpu: "500m"
+    volumeMounts:
+    - mountPath: /usr/share/nginx/html
+      name: web-content
+    livenessProbe:
+      httpGet:
+        path: /healthz
+        port: 80
+      initialDelaySeconds: 3
+      periodSeconds: 3
+    readinessProbe:
+      httpGet:
+        path: /readyz
+        port: 80
+      initialDelaySeconds: 3
+      periodSeconds: 3
+    startupProbe:
+      httpGet:
+        path: /startup
+        port: 80
+      failureThreshold: 30
+      periodSeconds: 10
+    lifecycle:
+      postStart:
+        exec:
+          command: ["/bin/sh", "-c", "echo Hello World"]
+      preStop:
+        exec:
+          command: ["/bin/sh", "-c", "echo Goodbye World"]
+    securityContext:
+      runAsUser: 1000
+      runAsGroup: 3000
+      fsGroup: 2000
+      capabilities:
+        add: ["NET_ADMIN", "SYS_TIME"]
+    stdin: true
+    tty: true
+    workingDir: /usr/share/nginx
+  initContainers:
+  - name: init-myservice
+    image: busybox
+    command: ['sh', '-c', 'until nslookup myservice; do echo waiting for myservice; sleep 2; done;']
+
+  restartPolicy: Always
+  terminationGracePeriodSeconds: 30
+  activeDeadlineSeconds: 600
+  dnsPolicy: ClusterFirst
+  nodeSelector:
+    disktype: ssd
+  serviceAccountName: my-service-account
+  automountServiceAccountToken: true
+  hostNetwork: false
+  hostPID: false
+  hostIPC: false
+  shareProcessNamespace: false
+  securityContext:
+    runAsUser: 1000
+    fsGroup: 2000
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+        - matchExpressions:
+          - key: disktype
+            operator: In
+            values:
+            - ssd
+    podAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+      - labelSelector:
+          matchExpressions:
+          - key: app
+            operator: In
+            values:
+            - my-app
+        topologyKey: "kubernetes.io/hostname"
+    podAntiAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+      - labelSelector:
+          matchExpressions:
+          - key: app
+            operator: In
+            values:
+            - my-app
+        topologyKey: "kubernetes.io/hostname"
+  topologySpreadConstraints:
+  - maxSkew: 1
+    topologyKey: "kubernetes.io/hostname"
+    whenUnsatisfiable: DoNotSchedule
+    labelSelector:
+      matchLabels:
+        app: my-app
+  tolerations:
+  - key: "key1"
+    operator: "Equal"
+    value: "value1"
+    effect: "NoSchedule"
+  hostAliases:
+  - ip: "127.0.0.1"
+    hostnames:
+    - "foo.local"
+    - "bar.local"
+  volumes:
+  - name: web-content
+    hostPath:
+      path: /data/web
+      type: Directory
+  - name: config-volume
+    configMap:
+      name: my-config
+  - name: secret-volume
+    secret:
+      secretName: my-secret
+  - name: persistent-storage
+    persistentVolumeClaim:
+      claimName: my-pvc
+  ephemeralContainers:
+  - name: debug-container
+    image: busybox
+    command: ['sh', '-c', 'sleep 1d']
+
+  priorityClassName: high-priority
+  runtimeClassName: my-runtime-class
+  dnsConfig:
+    nameservers:
+    - 1.1.1.1
+    - 8.8.8.8
+    searches:
+    - default.svc.cluster.local
+    options:
+    - name: ndots
+      value: "2"
+  readinessGates:
+  - conditionType: Ready
+
+  enableServiceLinks: true
+  preemptionPolicy: PreemptLowerPriority
+  overhead:
+    cpu: "100m"
+    memory: "128Mi"
+  ephemeralContainers:
+    - name: debug-container
+      image: busybox
+      command: ["sh", "-c", "sleep 1d"]
