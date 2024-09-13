@@ -7,6 +7,19 @@ metadata:
 spec:
   containers:
     - name: nginx
-      image: swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/nginx:1.16-linuxarm64
+      image: registry.cn-hangzhou.aliyuncs.com/bolawen/nginx:1.27.1-perl-linux-arm64
       ports:
         - containerPort: 80
+      env:
+        - name: IP
+          value: "192.168.0.0"
+        - name: PORT
+          value: "8080"
+        - name: ADDR
+          value: $(IP):$(PORT)
+      command:
+        [
+          "sh",
+          "-c",
+          "echo The app is running in $ADDR && nginx -g 'daemon off;'",
+        ]
