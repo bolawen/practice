@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx
+spec:
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:
+              - key: disktype
+                operator: In
+                values:
+                  - disk1
+  containers:
+    - name: nginx
+      image: registry.cn-hangzhou.aliyuncs.com/bolawen/nginx:1.27.1-perl-linux-arm64
+      imagePullPolicy: IfNotPresent
