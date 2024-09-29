@@ -1,8 +1,8 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: special-config
+  name: config-map-data
   namespace: default
 data:
-  NAME: bolawen
-  AGE: 23
+  NAME: "bolawen"
+  AGE: "23"

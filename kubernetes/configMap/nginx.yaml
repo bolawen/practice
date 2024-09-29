@@ -11,15 +11,14 @@ spec:
       ports:
         - containerPort: 80
       env:
-        - name: IP
-          value: "192.168.0.0"
-        - name: PORT
-          value: "8080"
-        - name: ADDR
-          value: $(IP):$(PORT)
-      command:
-        [
-          "sh",
-          "-c",
-          "echo The app is running in $ADDR && nginx -g 'daemon off;'",
-        ]
+        - name: NAME
+          valueFrom:
+            configMapKeyRef:
+              name: config-map-data
+              key: NAME
+        - name: AGE
+          valueFrom:
+            configMapKeyRef:
+              name: config-map-data
+              key: AGE
+      command: ["sh", "-c", "echo $NAME $AGE && nginx -g 'daemon off;'"]
