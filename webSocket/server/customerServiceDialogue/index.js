@@ -8,6 +8,7 @@ const router = new KoaRouter();
 const server = HTTP.createServer(app.callback());
 const wss = new WebSocket.Server({ server });
 
+const HEARTBEAT_INTERVAL = 30000; // 心跳间隔时间
 const connectedClients = new Map(); // 存储用户和客服的连接
 const waitingUsersQueue = []; // 存储等待的用户
 const availableSupportAgents = new Map(); // 存储客服
@@ -93,18 +94,25 @@ function removeUserConnection(userId, role) {
 
 // 心跳机制，定期检查连接
 function setupHeartbeat(webSocket) {
+  webSocket.isAlive = true; // 初始化心跳状态
+
   const interval = setInterval(() => {
-    if (webSocket.isAlive === false) return webSocket.terminate();
-    webSocket.isAlive = false;
-    webSocket.send(JSON.stringify({ type: "heartbeat" }));
-  }, 30000); // 每30秒检查一次
+    if (webSocket.isAlive === false) {
+      console.log("Terminating WebSocket due to no heartbeat response.");
+      return webSocket.terminate(); // 终止连接
+    }
+    webSocket.isAlive = false; // 设置为 false，等待响应
+    webSocket.ping(); // 发送 ping
+  }, HEARTBEAT_INTERVAL); // 每隔 HEARTBEAT_INTERVAL 秒检查一次
 
   webSocket.on("pong", () => {
+    console.log("WebSockete pong received.");
     webSocket.isAlive = true; // 收到心跳回应
   });
 
   webSocket.on("close", () => {
-    clearInterval(interval);
+    console.log("WebSocket closed 002");
+    clearInterval(interval); // 清除心跳检查
   });
 }
 
@@ -120,7 +128,7 @@ wss.on("connection", (webSocket, req) => {
   }
 
   connectedClients.set(userId, webSocket); // 存储连接
-  webSocket.isAlive = true; // 初始化心跳状态
+
   setupHeartbeat(webSocket); // 设置心跳机制
 
   if (role === "user") {

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <h1>WebSocket Heartbeat Example</h1>
+    <div id="status">Connecting...</div>
+
+    <script>
+      const socket = new WebSocket("ws://localhost:3000");
+
+      socket.addEventListener("open", () => {
+        document.getElementById("status").textContent = "Connected";
+        console.log("WebSocket connection established");
+      });
+
+      socket.addEventListener("message", (event) => {
+        const data = JSON.parse(event.data);
+        // 不需要处理 heartbeat 相关的消息
+      });
+
+      socket.addEventListener("close", () => {
+        document.getElementById("status").textContent = "Disconnected";
+        console.log("WebSocket connection closed");
+      });
+
+      socket.addEventListener("error", (error) => {
+        console.error("WebSocket error:", error);
+      });
+    </script>
+  </body>
+</html>
