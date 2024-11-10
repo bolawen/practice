@@ -11,9 +11,18 @@
     "pull": "git fetch --all && git reset --hard origin/master && git pull origin master"
   },
   "dependencies": {
+    "@babel/generator": "^7.26.2",
+    "@babel/parser": "^7.26.2",
+    "@babel/traverse": "^7.25.9",
+    "@babel/types": "^7.26.0",
     "@koa/cors": "^5.0.0",
+    "@swc/core": "^1.9.1",
+    "jscodeshift": "^17.1.1",
+    "koa": "^2.15.3",
     "koa-body": "^6.0.1",
     "koa-router": "^13.0.1",
-    "koa-static": "^5.0.0"
+    "koa-static": "^5.0.0",
+    "oxc-parser": "^0.36.0",
+    "oxc-transform": "^0.36.0"
   }
 }
