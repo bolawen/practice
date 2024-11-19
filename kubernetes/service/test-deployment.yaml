@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: test-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: test-nginx
+  template:
+    metadata:
+      labels:
+        app: test-nginx
+    spec:
+      containers:
+        - name: test-nginx
+          image: registry.cn-hangzhou.aliyuncs.com/bolawen/nginx:1.27.1-perl-linux-arm64
+          ports:
+            - containerPort: 80
