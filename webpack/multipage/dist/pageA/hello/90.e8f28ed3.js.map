@@ -1,0 +1,1 @@
+{"version":3,"file":"PageA/hello/90.e8f28ed3.js","mappings":"wHAAO,IAAMA,EAAa,WACxBC,QAAQC,IAAI,iBACd,C","sources":["webpack://dll/./src/pageA/hello.ts"],"sourcesContent":["export const printHello = () => {\n  console.log(\"Hello, Page A!\");\n};\n"],"names":["printHello","console","log"],"sourceRoot":""}

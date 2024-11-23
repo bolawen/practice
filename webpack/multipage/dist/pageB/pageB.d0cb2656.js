@@ -1,2 +1,0 @@
-"use strict";(self.webpackChunkdll=self.webpackChunkdll||[]).push([[164],{94:(l,e,r)=>{function n(l){if(0===l.length)return 0;for(var e=l[0],r=0,n=1;n<l.length;n++)l[n]<e?e=l[n]:l[n]-e>r&&(r=l[n]-e);return r}r.r(e),r.d(e,{maxProfit:()=>n}),console.log(n([7,1,5,3,6,4]))},653:(l,e,r)=>{var n=r(94);console.log((0,n.maxProfit)([1,2,3]))}},l=>{l.O(0,[888,76],(()=>l(l.s=653))),l.O()}]);
-//# sourceMappingURL=pageB.d0cb2656.js.map

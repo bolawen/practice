@@ -1,2 +1,0 @@
-"use strict";(self.webpackChunkdll=self.webpackChunkdll||[]).push([[863],{301:(r,n,o)=>{function t(){for(var r="#",n=0;n<6;n++)r+="0123456789ABCDEF"[Math.floor(16*Math.random())];return r}o.r(n),o.d(n,{getRandomColor:()=>t})},94:(r,n,o)=>{function t(r){if(0===r.length)return 0;for(var n=r[0],o=0,t=1;t<r.length;t++)r[t]<n?n=r[t]:r[t]-n>o&&(o=r[t]-n);return o}o.r(n),o.d(n,{maxProfit:()=>t}),console.log(t([7,1,5,3,6,4]))}}]);
-//# sourceMappingURL=863.2417f8bb.js.map

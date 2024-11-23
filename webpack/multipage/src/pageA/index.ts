@@ -1,4 +1,5 @@
-import { deepClone } from "../common/a";
+import { test } from "../common/e";
+import { multiply, deepClone } from "../common/a";
 
 const a = {
   a: 1,
@@ -8,12 +9,17 @@ const a = {
 const b = deepClone(a);
 console.log(b);
 
-import(/* webpackChunkName: "PageA" */ "../common/b").then(
-  ({ getRandomColor }) => {
-    console.log(getRandomColor());
+const result = multiply(2, 3);
+console.log(result);
+
+console.log(test());
+
+import(/* webpackChunkName: "PageA/hello" */ "./hello").then(
+  ({ printHello }) => {
+    printHello();
   }
 );
 
-import(/* webpackChunkName: "PageA" */ "../common/c").then(({ maxProfit }) => {
-  console.log(maxProfit([1, 2, 3]));
+import(/* webpackChunkName: "PageA/word" */ "./word").then(({ printWord }) => {
+  printWord("word");
 });
