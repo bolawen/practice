@@ -23,3 +23,12 @@ import(/* webpackChunkName: "PageA/hello" */ "./hello").then(
 import(/* webpackChunkName: "PageA/word" */ "./word").then(({ printWord }) => {
   printWord("word");
 });
+
+
+// @if mode='development'
+console.log("development");
+// @endif
+
+// @if mode='production'
+console.log("production");
+// @endif

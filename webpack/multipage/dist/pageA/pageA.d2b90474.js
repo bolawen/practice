@@ -1,2 +1,0 @@
-"use strict";(self.webpackChunkdll=self.webpackChunkdll||[]).push([[367],{220:(n,e,l)=>{var o=l(280),t=l(812),s=(0,t.Go)({a:1,b:2});console.log(s);var c=(0,t.lw)(2,3);console.log(c),console.log((0,o.t)()),l.e(90).then(l.bind(l,804)).then((function(n){(0,n.printHello)()})),l.e(262).then(l.bind(l,898)).then((function(n){(0,n.printWord)("word")}))}},n=>{n.O(0,[888,76],(()=>n(n.s=220))),n.O()}]);
-//# sourceMappingURL=pageA.d2b90474.js.map

@@ -1,0 +1,1 @@
+{"version":3,"file":"PageA/word/262.ad70a5c4.js","mappings":"wHAAO,IAAMA,EAAY,SAACC,GACxBC,QAAQC,IAAIF,EACd,C","sources":["webpack://dll/./src/pageA/word.ts"],"sourcesContent":["export const printWord = (word: string) => {\n  console.log(word);\n};\n"],"names":["printWord","word","console","log"],"sourceRoot":""}

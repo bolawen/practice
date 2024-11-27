@@ -43,9 +43,19 @@ module.exports = {
     rules: [
       {
         test: /\.ts$/,
-        use: ["swc-loader"],
         exclude: /node_modules/,
         include: Path.resolve(process.cwd(), "src"),
+        use: [
+          "swc-loader",
+          {
+            loader: Path.resolve(__dirname, "loader/preprocess-loader.js"),
+            options: {
+              context: {
+                mode: "production",
+              },
+            },
+          },
+        ],
       },
     ],
   },
