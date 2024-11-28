@@ -32,3 +32,9 @@ console.log("development");
 // @if mode='production'
 console.log("production");
 // @endif
+
+
+define("require", "exports", "./hello", function(require, exports, fetch_1){
+  console.log("fetch_1", fetch_1);
+  fetch_1.printHello();
+});
