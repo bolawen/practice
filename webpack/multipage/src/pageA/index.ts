@@ -38,3 +38,11 @@ define("require", "exports", "./hello", function(require, exports, fetch_1){
   console.log("fetch_1", fetch_1);
   fetch_1.printHello();
 });
+
+(function commonJS(require, module) {
+  'use strict';
+  
+  require('./hello');
+  
+  module.exports = '720kb.tooltips';
+  }(require, module));

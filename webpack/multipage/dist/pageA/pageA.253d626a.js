@@ -1,2 +1,0 @@
-"use strict";(self.webpackChunkdll=self.webpackChunkdll||[]).push([[367],{400:(o,e,n)=>{var l=n(412),t=n(656),c=(0,t.Go)({a:1,b:2});console.log(c);var i=(0,t.lw)(2,3);console.log(i),console.log((0,l.t)()),n.e(90).then(n.bind(n,592)).then((function(o){(0,o.printHello)()})),n.e(262).then(n.bind(n,262)).then((function(o){(0,o.printWord)("word")})),console.log("production"),define("require","exports","./hello",(function(o,e,n){console.log("fetch_1",n),n.printHello()}))}},o=>{o.O(0,[888,76],(()=>o(o.s=400))),o.O()}]);
-//# sourceMappingURL=pageA.253d626a.js.map
