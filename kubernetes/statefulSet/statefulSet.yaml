@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: test-stateful-set
+spec:
+  serviceName: "test-headless-service"
+  replicas: 3
+  selector:
+    matchLabels:
+      app: test-stateful-set-nginx
+  template:
+    metadata:
+      labels:
+        app: test-stateful-set-nginx
+    spec:
+      containers:
+        - name: nginx
+          image: registry.cn-hangzhou.aliyuncs.com/bolawen/nginx:1.27.1-perl-linux-arm64
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - name: test-volume
+              mountPath: /usr/share/nginx/html
+  volumeClaimTemplates:
+    - metadata:
+        name: test-volume
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 1Gi
