@@ -8,5 +8,6 @@
       "other": "on"
     }
   },
-  "cSpell.words": ["pinia"]
+  "cSpell.words": ["pinia"],
+  "github.copilot.enable": false
 }
