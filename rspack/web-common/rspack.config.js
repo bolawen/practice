@@ -70,6 +70,7 @@ const lessRules = [
 
 /** @type {import('@rspack/cli').Configuration} */
 const config = {
+  mode: "production",
   entry: {
     main: "./src/index.tsx",
   },
@@ -86,7 +87,7 @@ const config = {
     rules: [
       {
         test: /\.(js|ts)$/,
-        type: 'javascript/auto',
+        type: "javascript/auto",
         exclude: [/node_modules/],
         use: [
           {
@@ -105,7 +106,7 @@ const config = {
       },
       {
         test: /\.(jsx|tsx)$/,
-        type: 'javascript/auto',
+        type: "javascript/auto",
         exclude: [/node_modules/],
         use: [
           {
