@@ -1,0 +1,18 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: backend-server-logrotate-cron-job
+spec:
+  schedule: "0 0 * * *"  # 每天午夜执行一次
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: logrotate
+            image: busybox
+            command:
+              - "/bin/sh"
+              - "-c"
+              - "logrotate /etc/logrotate.d/app-logrotate.conf"  
+          restartPolicy: OnFailure

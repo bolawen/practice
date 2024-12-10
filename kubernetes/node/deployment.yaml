@@ -28,6 +28,11 @@ spec:
                 secretKeyRef:
                   name: backend-server-secret
                   key: DB_PASSWORD
+            volumeMounts:
+              - name: backend-server-logs-volume
+                mountPath: /logs
+              - name: backend-server-logrotate-config-volume
+                mountPath: /etc/logrotate.d
           resources:
             requests:
               cpu: "250m"
@@ -35,3 +40,10 @@ spec:
             limits:
               cpu: "500m"
               memory: "256Mi"
+      volumes:
+        - name: backend-server-logs-volume
+          persistentVolumeClaim:
+            claimName: backend-server-logs-pvc
+        - name: backend-server-logrotate-config-volume
+          configMap:
+            name: backend-server-logrotate-config-map
