@@ -1,3 +1,9 @@
 .app{
-    color: red;
+    width: 100px;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 20px; /* 或根据实际情况调整 */
 }
