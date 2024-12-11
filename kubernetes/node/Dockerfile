@@ -4,6 +4,7 @@ COPY package*.json /server
 RUN npm install --registry=https://registry.npmmirror.com
 COPY . /server 
 
+ENV APP_ENV=test
 ENV APP_PORT=3000
 ENV DB_PASSWORD=defaultpassword
 

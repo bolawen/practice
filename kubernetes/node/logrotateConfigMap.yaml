@@ -13,5 +13,5 @@ data:
         notifempty
         create 0644 root root
         postrotate
-            systemctl reload app
+            kill -HUP $(pidof node) || true
         endscript

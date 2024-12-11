@@ -3,16 +3,28 @@ kind: CronJob
 metadata:
   name: backend-server-logrotate-cron-job
 spec:
-  schedule: "0 0 * * *"  # 每天午夜执行一次
+  schedule: "0 0 * * *" # 每天午夜执行一次
   jobTemplate:
     spec:
       template:
         spec:
           containers:
             - name: logrotate
-            image: busybox
-            command:
-              - "/bin/sh"
-              - "-c"
-              - "logrotate /etc/logrotate.d/app-logrotate.conf"  
+              image: registry.cn-hangzhou.aliyuncs.com/bolawen/alpine:3.21.0-linux-arm64
+              command:
+                - "/bin/sh"
+                - "-c"
+                - "logrotate -f /etc/logrotate.d/app-logrotate.conf"
+              volumeMounts:
+                - name: logrotate-config
+                  mountPath: /etc/logrotate.d
+                - name: logs-volume
+                  mountPath: /logs
           restartPolicy: OnFailure
+          volumes:
+            - name: logrotate-config
+              configMap:
+                name: backend-server-logrotate-config-map
+            - name: logs-volume
+              persistentVolumeClaim:
+                claimName: backend-server-logs-pvc

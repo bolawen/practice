@@ -1,17 +1,13 @@
 const Koa = require("koa");
-const winston = require("winston");
+const pino = require("pino");
 const KoaRouter = require("koa-router");
 
 const port = 3000;
 const app = new Koa();
 const router = new KoaRouter();
 
-const logger = winston.createLogger({
-  transports: [
-    new winston.transports.Console(),
-    new winston.transports.File({ filename: "logs/backend-server.log" })  // 日志写入指定路径
-  ],
-});
+const logFile = pino.destination("logs/backend-server.log");
+const logger = pino(logFile);
 
 router.get("/", (ctx) => {
   logger.info("Hello again distributed logs");

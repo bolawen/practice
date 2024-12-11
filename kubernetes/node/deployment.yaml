@@ -14,10 +14,15 @@ spec:
     spec:
       containers:
         - name: backend-server
-          image: registry.cn-hangzhou.aliyuncs.com/bolawen/backend-server:1.0.1
+          image: registry.cn-hangzhou.aliyuncs.com/bolawen/backend-server:1.0.3
           ports:
             - containerPort: 3000
           env:
+            - name: APP_ENV
+              valueFrom:
+                configMapKeyRef:
+                  name: backend-server-config-map
+                  key: APP_ENV
             - name: APP_PORT
               valueFrom:
                 configMapKeyRef:
@@ -28,11 +33,11 @@ spec:
                 secretKeyRef:
                   name: backend-server-secret
                   key: DB_PASSWORD
-            volumeMounts:
-              - name: backend-server-logs-volume
-                mountPath: /logs
-              - name: backend-server-logrotate-config-volume
-                mountPath: /etc/logrotate.d
+          volumeMounts:
+            - name: backend-server-logs-volume
+              mountPath: /logs
+            - name: backend-server-logrotate-config-volume
+              mountPath: /etc/logrotate.d
           resources:
             requests:
               cpu: "250m"

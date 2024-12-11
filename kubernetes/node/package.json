@@ -11,6 +11,9 @@
   "license": "ISC",
   "dependencies": {
     "koa": "^2.15.3",
-    "koa-router": "^13.0.1"
+    "koa-router": "^13.0.1",
+    "pino": "^9.5.0",
+    "winston": "^3.17.0",
+    "koa-pino-logger": "^4.0.0"
   }
 }
